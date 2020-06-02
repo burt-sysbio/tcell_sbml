@@ -1,0 +1,13 @@
+model prolif
+	# comment
+	J0: S1 -> 2 S1; k*S1
+	J1: S2 -> ; k2*S2
+	k := betap(S2, 2, 1);
+	k2 = 1
+	S1 = 1
+	S2 = 1
+
+	function betap(S2, vmax, Km)
+		vmax*S2/(S2+Km)
+	end
+end

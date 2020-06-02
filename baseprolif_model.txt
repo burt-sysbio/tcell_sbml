@@ -1,0 +1,185 @@
+# unit conversion for cytokines (assumes picomolar conc 1e12 then multiplies by lymph node vol 1e6 and divides by avogadro number 6e23)
+function cyto_conv(rate)
+	rate*1e6*1e12/(1e23*6.02)
+end
+
+# convert picomolar to molecules
+function mol_to_molecules(mol)
+	mol*6.02*1e23/(1e6*1e12)
+end
+
+function pos_feedback(cyto, EC50)
+	(cyto/(cyto+EC50))+0.0001
+end
+
+
+function prob_feedback(conc, fbstren, EC50)
+	((fbstren*conc+EC50)/(conc+EC50))+0.0001
+end
+
+
+function neg_feedback(cyto, EC50)
+	(EC50/(cyto+EC50))+0.0001
+end
+
+model test
+    # naive differentiation
+    Naive' = -r_Naive*Naive
+    Precursor' = 2*r_Naive*Naive + (2*prolif_Prec*prob_Prec*r_Prec)*Precursor1 - (r_Prec+death_Prec)*Precursor
+
+    # precursor differentiation
+    Precursor1' = r_Prec*Precursor - (r_Prec+death_Prec)*Precursor1
+
+    # effector differentiation (new! also include transition from Th1 to Tfh)
+    Th1' = 4*prob_Th1*r_Prec*Precursor1 + prolif_Th1*Th1 - (death_Th1+r_Th1_noIL2+r_Th1_Tfh+r_Th1_Tr1)*Th1
+    Tfh' = 4*prob_Tfh*r_Prec*Precursor1 + prolif_Tfh*Tfh + r_Th1_Tfh*(Th1+Th1_noIL2) - (death_Tfh+r_gcTfh+r_Tfh_chronic)*Tfh
+    Tr1' = 4*prob_Tr1*r_Prec*Precursor1 + prolif_Tr1*Tr1 + r_Th1_Tr1*(Th1+Th1_noIL2) - death_Tr1*Tr1
+
+    # final effector
+    Th1_noIL2' = r_Th1_noIL2*Th1 + prolif_Th1*Th1_noIL2 - (death_Th1+r_Mem+r_Th1_Tfh+r_Th1_Tr1)*Th1_noIL2
+    gcTfh' = r_gcTfh*Tfh + prolif_Tfh*gcTfh - (death_Tfh+r_Mem+r_Tfh_chronic)*gcTfh
+ 
+    # chronic Tfh
+    Tfh_chronic' = r_Tfh_chronic*(Tfh+gcTfh) - death_Tfh_chronic*Tfh_chronic
+
+    # memory
+    Th1_mem' = r_Mem*Th1_noIL2
+    Tfh_mem' = r_Mem*gcTfh
+
+    # molecules
+    Myc' = -deg_Myc*Myc
+
+    # cytokines
+    IL2_consumers := Naive+Precursor+Precursor1+Th1+Th1_noIL2
+    IL2_producers := Naive+Precursor+Precursor1+Th1+Tfh
+    IL10_consumers := Precursor+Precursor1+Th1+Th1_noIL2+Tr1
+
+    IL2' = r_IL2*IL2_producers - up_IL2*IL2_consumers*(IL2/(IL2+KC_IL2)) - deg_IL2*IL2
+    IL10' = r_IL10*Tr1 - up_IL10*IL10_consumers*(IL10/(IL10+KC_IL10)) - deg_IL10*IL10
+    IL10_ex' = r_IL10_ex*pos_feedback(TCR, EC50_TCR)*pos_feedback(IFNI, EC50_IFNI) - up_IL10*IL10_consumers*(IL10_ex/(IL10_ex+KC_IL10)) - deg_IL10*IL10_ex
+    
+    IFNI' = r_IFNI - deg_IFNI*IFNI*time
+
+
+    #p1 = 0
+    #p2 = 0
+    # add additional IL10 ramp then stop
+    #t0 = 6
+    #at time > t0:
+    #	p1 = 1
+    #at time > 20:
+    #	p2 = 0
+
+    # antigen
+    TCR' = -deg_TCR*TCR
+
+    # rate constants
+    r_Naive = 0.5 
+    r_Prec = 0.25
+    r_Th1_noIL2 = 1.0
+    r_Th1_Tr1_base = 0.25
+    r_Th1_Tfh_base = 0.25
+    r_Tfh_chronic = 0    
+    r_gcTfh = 0.25
+    r_Mem = 0.01
+
+    # differentiation rates
+    r_Th1_Tr1 := r_Th1_Tr1_base*pos_feedback(TCR, EC50_TCR)*pos_feedback(IL10+IL10_ex, EC50_IL10)
+    r_Th1_Tfh := r_Th1_Tfh_base*pos_feedback(TCR, EC50_TCR) 
+
+    # proliferation rates
+    base_prolif0 = 2.1
+    prolif_cyto0 = 0.3
+    prolif_TCR0 = 5.5
+    
+    base_prolif := base_prolif0*pos_feedback(Myc, EC50_Myc)
+    prolif_cyto := prolif_cyto0*pos_feedback(IL2, EC50_IL2)*neg_feedback(IL10+IL10_ex, EC50_IL10)
+    prolif_TCR := prolif_TCR0*pos_feedback(TCR, EC50_TCR)
+    
+    prolif_Prec := base_prolif + prolif_TCR
+    prolif_Th1 := base_prolif + prolif_cyto 
+    prolif_Tr1 := base_prolif
+    prolif_Tfh := base_prolif
+
+    # probabilities
+    pTh1_0 = 0.5
+    pTfh_0 = 0.2
+    pTr1_0 = 0.001
+    pPrec_0 = 1-pTh1_0-pTfh_0-pTr1_0
+
+    # calculate feedback on probability
+    fb_stren_pos = 2.0
+    fb_stren_neg = 1/fb_stren_pos
+    pTh1_fb := pTh1_0*prob_feedback(IL10+IL10_ex, fb_stren_neg, EC50_IL10)
+    pTfh_fb := pTfh_0*prob_feedback(IL2, fb_stren_neg, EC50_IL2)
+    pTr1_fb := pTr1_0*prob_feedback(IL10+IL10_ex, fb_stren_pos, EC50_IL10)
+
+    # normalize probabilities
+    prob_Th1 := pTh1_fb / (pTh1_fb+pTfh_fb+pTr1_fb+pPrec_0)
+    prob_Tfh := pTfh_fb / (pTh1_fb+pTfh_fb+pTr1_fb+pPrec_0)
+    prob_Tr1 := pTr1_fb / (pTh1_fb+pTfh_fb+pTr1_fb+pPrec_0)
+    prob_Prec := pPrec_0 / (pTh1_fb+pTfh_fb+pTr1_fb+pPrec_0)
+
+    # death
+    death_Prec = 0.24
+    death_Th1 = 0.24
+    death_Tfh = 0.24
+    death_Tr1 = 0.24
+    death_Tfh_chronic = 0.24
+
+    # molecule kinetics
+    r_IFNI = 0
+    EC50_IFNI = 1.0
+    r_IL10_ex = 100.0
+    deg_IFNI = 1.0
+
+    deg_Myc = 0.32
+    
+
+    # TCR signaling
+    deg_TCR = 0.2
+
+    # cytokine production uptake degradation
+    r_IL2 = 10.0*3600*24
+    r_IL10 = 10.0*3600*24
+
+    up_IL2 = 1.0*3600*24
+    up_IL10 = 1.0*3600*24
+
+ 	KC_IL2 = mol_to_molecules(10.0)
+    KC_IL10 = mol_to_molecules(10.0)
+
+    deg_IL2 = 0.1*24+2000
+    deg_IL10 = 0.1*24+1000
+
+    # feedback effects
+    EC50_IL2 = mol_to_molecules(6.5)
+    EC50_IL10 = mol_to_molecules(50.0)
+    EC50_Myc = 0.1
+    EC50_TCR = 0.5
+ 	
+    # initial conditions
+    Naive = 200
+    Precursor = 0
+    Precursor1 = 0
+    Th1 = 0
+    Th1_noIL2 = 0
+    Th1_chronic = 0
+    Tfh = 0
+    Tfh_chronic = 0
+    Tr1 = 0
+    Th1_mem = 0
+    gcTfh = 0
+    Tfh_mem = 0
+
+    # initial conditions cytokines
+    IL2 = 0
+    IL10 = 0
+    IL10_ex = 0
+
+    # initial conditions molecules
+    Myc = 1
+    TCR = 1
+    IFNI = 0
+
+end
