@@ -12,8 +12,17 @@ import seaborn as sns
 from scipy import constants
 import numpy as np
 import matplotlib.pyplot as plt
+import os
+from datetime import date
+import matplotlib
 
-sns.set(context = "paper")
+sns.set(context = "paper", style = "ticks")
+
+today = str(date.today())
+path = "tellurium_figs/"
+if not os.path.exists(path+today):
+    os.makedirs(path+today)
+
 
 def get_rel_cells(cells):
     #add total cells and compute relative cell fractions
@@ -33,17 +42,71 @@ def plot_param_uncertainty(model, startVal, name, ax, num_sims = 20):
 
     # assumes initial parameter estimate as mean and iterates 60% above and below.
     vals = np.linspace((1-stdDev)*startVal, (1+stdDev)*startVal, num_sims)
+    df_arm = []
+    df_cl13 = []
+    
     for val in vals:
         r.resetToOrigin()
         exec("r.%s = %f" % (name, val))
         cells = run_pipeline(r)
         cells_rel = get_rel_cells(cells)
         cells_rel = filter_cells(cells_rel, ["Tfh_all"])
+        cells_rel["val"] = val
         
         
-        sns.lineplot(data = cells_rel, x = "time", y = "total", hue = "Infection",
-                     palette = ["0.2", "tab:red"], ax = ax, legend = False)
-        ax.set_xlabel(name)
+        df_arm.append(cells_rel[cells_rel.Infection == "Arm"])
+        df_cl13.append(cells_rel[cells_rel.Infection == "Cl13"])
+        
+    df_arm = pd.concat(df_arm)
+    df_cl13 = pd.concat(df_cl13)
+    
+    sns.lineplot(data = df_arm, x = "time", y = "total", hue = "val",
+                 palette = "Reds", ax = ax, legend = False)
+
+    
+    sns.lineplot(data = df_cl13, x = "time", y = "total", hue = "val",
+                 palette = "Blues", ax = ax, legend = False)
+    
+    ax.set_xlabel(name)
+    ax.set_ylabel("Tfh (% of total)")
+
+    # set to origin at the end of experiment
+    r.resetToOrigin()
+    
+
+def plot_param_uncertainty2(model, startVal, name, num_sims = 20):
+    stdDev = 0.5
+
+    # assumes initial parameter estimate as mean and iterates 60% above and below.
+    vals = np.linspace((1-stdDev)*startVal, (1+stdDev)*startVal, num_sims)
+
+    df = []
+
+    norm = matplotlib.colors.Normalize(
+            vmin=np.min(vals),
+            vmax=np.max(vals))      
+    
+    for val in vals:
+        r.resetToOrigin()
+        exec("r.%s = %f" % (name, val))
+        cells = run_pipeline(r)
+        cells_eff = filter_cells(cells, ["Th1_all", "Tfh_all", "Tr1"])
+        cells_eff["val"] = val
+
+        df.append(cells_eff)
+
+    df = pd.concat(df)
+    g = sns.relplot(data = df, x = "time", y = "value", hue = "val",
+                    hue_norm = norm, palette = "Greys",
+                    col = "celltype", row = "Infection", kind = "line")
+    
+    g.set(yscale = "log", ylabel = "cells", ylim = (1, None))
+    g.savefig(path+today+"/pscan15.pdf")
+
+
+    r.resetToOrigin()
+    
+    return df
 
 
 
@@ -55,6 +118,7 @@ def compute_cell_states(df):
     df["Total_eff"] = df.Th1_all + df.Tfh_all + df.Tr1
     df["nonTfh"] = df.Th1_all+df.Tr1
     return df
+
 
 def tidy_sort(df):
     
@@ -89,7 +153,8 @@ def run_pipeline(r):
     
     # sum arm and cl13 sim
     r.reset()
-    r.p2 = 1000000000
+    #r.p2 = 1000000000
+    r.r_IFNI = 1
     r.deg_TCR = 0.001
     cl13_sim = r.simulate(0,tend,res)
 
@@ -121,7 +186,7 @@ r = te.loada(antimony_model)
 
 startVals = r.getGlobalParameterValues()
 ids = r.getGlobalParameterIds()
-pnames = ["fb_stren_pos", "r_Th1_Tfh_base", "deg_IL10",
+pnames = ["fb_stren_pos", "r_Th1_Tfh_base", "deg_IL10_consumers",
           "deg_Myc", "EC50_TCR", "prolif_cyto0",
           "r_Th1_Tr1_base", "r_Prec", "r_Th1_noIL2"]
 
@@ -133,3 +198,12 @@ for ax, a in zip(axes.flatten(), arr):
     plot_param_uncertainty(r, a[0], a[1], ax)
 
 plt.tight_layout()
+
+fig.savefig(path+today+"/pscan.pdf")
+
+
+
+test = plot_param_uncertainty2(r,  0.25 , "r_Prec")
+
+
+

@@ -102,10 +102,16 @@ arm_sim = r.simulate(0, 70, 200)
 
 # prep model for cl13 sim
 r.resetToOrigin()
-r.r_IL10_ex = 100
+#r.r_IL10_ex = 100
+# change TCR signal level so that it does not decrease
 r.deg_TCR = 0.001
+# increase rate of IFN-I
+r.r_IFNI = 1
 cl13_sim = r.simulate(0,70,200)
 r.resetToOrigin()
+
+
+#print(te.getODEsFromModel(r))
 
 # =============================================================================
 # finalize data frames
@@ -124,9 +130,8 @@ tidy_all = pd.concat([tidy_arm, tidy_cl13])
 # plot everything
 # =============================================================================
 g = sns.relplot(data = tidy_all, x = "time", y = "value", col = "celltype",
-                col_wrap = 2, hue = "Infection", kind = "line", facet_kws = {"sharey" : False})
+                col_wrap = 8, hue = "Infection", kind = "line", facet_kws = {"sharey" : False})
 g.set(yscale = "log", ylim = (0.01, None), xlabel = xlabel, xticks = xticks)
-print(te.getODEsFromModel(r))
 
 
 cells = pd.concat([cells_arm, cells_cl13])

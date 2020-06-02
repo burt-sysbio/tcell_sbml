@@ -1,4 +1,3 @@
-# unit conversion for cytokines (assumes picomolar conc 1e12 then multiplies by lymph node vol 1e6 and divides by avogadro number 6e23)
 function cyto_conv(rate)
 	rate*1e6*1e12/(1e23*6.02)
 end
@@ -128,9 +127,9 @@ model test
     death_Tfh_chronic = 0.24
 
     # molecule kinetics
-    r_IFNI = 0
+    r_IFNI = 0.1
     EC50_IFNI = 1.0
-    r_IL10_ex = 100.0
+    r_IL10_ex = 10000.0
     deg_IFNI = 1.0
 
     deg_Myc = 0.32
@@ -149,8 +148,11 @@ model test
  	KC_IL2 = mol_to_molecules(10.0)
     KC_IL10 = mol_to_molecules(10.0)
 
-    deg_IL2 = 0.1*24+2000
-    deg_IL10 = 0.1*24+1000
+    deg_cyto_base = 0.1*24
+    deg_IL2_consumers = 2000
+    deg_IL10_consumers = 1000
+    deg_IL2 = deg_cyto_base+deg_IL2_consumers
+    deg_IL10 = deg_cyto_base+deg_IL10_consumers
 
     # feedback effects
     EC50_IL2 = mol_to_molecules(6.5)
