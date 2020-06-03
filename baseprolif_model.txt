@@ -34,12 +34,15 @@ model test
     Tfh' = 4*prob_Tfh*r_Prec*Precursor1 + prolif_Tfh*Tfh + r_Th1_Tfh*(Th1+Th1_noIL2) - (death_Tfh+r_gcTfh+r_Tfh_chronic)*Tfh
     Tr1' = 4*prob_Tr1*r_Prec*Precursor1 + prolif_Tr1*Tr1 + r_Th1_Tr1*(Th1+Th1_noIL2) - death_Tr1*Tr1
 
+    # chronic Tfh
+    r_Tfh_chronic := r_Tfh_chronic0*pos_feedback(TCR, EC50_TCR)
+
+    gcTfh' = r_gcTfh*Tfh + prolif_Tfh*gcTfh - (death_Tfh+r_Mem+r_Tfh_chronic)*gcTfh
+    Tfh_chronic' = prob_Tfh_chronic*r_Prec*Precursor1 + r_Tfh_chronic*Tfh - (death_Tfh_chronic+r_gcTfh)*Tfh_chronic
+    gcTfh_chronic' = r_Tfh_chronic*gcTfh + r_gcTfh*Tfh_chronic - death_Tfh_chronic*gcTfh_chronic
+
     # final effector
     Th1_noIL2' = r_Th1_noIL2*Th1 + prolif_Th1*Th1_noIL2 - (death_Th1+r_Mem+r_Th1_Tfh+r_Th1_Tr1)*Th1_noIL2
-    gcTfh' = r_gcTfh*Tfh + prolif_Tfh*gcTfh - (death_Tfh+r_Mem+r_Tfh_chronic)*gcTfh
- 
-    # chronic Tfh
-    Tfh_chronic' = r_Tfh_chronic*(Tfh+gcTfh) - death_Tfh_chronic*Tfh_chronic
 
     # memory
     Th1_mem' = r_Mem*Th1_noIL2
@@ -78,7 +81,7 @@ model test
     r_Th1_noIL2 = 1.0
     r_Th1_Tr1_base = 0.25
     r_Th1_Tfh_base = 0.25
-    r_Tfh_chronic = 0    
+    r_Tfh_chronic0 = 0.1
     r_gcTfh = 0.25
     r_Mem = 0.01
 
@@ -89,7 +92,7 @@ model test
     # proliferation rates
     base_prolif0 = 2.1
     prolif_cyto0 = 0.3
-    prolif_TCR0 = 5.5
+    prolif_TCR0 = 6.5
     
     base_prolif := base_prolif0*pos_feedback(Myc, EC50_Myc)
     prolif_cyto := prolif_cyto0*pos_feedback(IL2, EC50_IL2)*neg_feedback(IL10+IL10_ex, EC50_IL10)
@@ -102,9 +105,10 @@ model test
 
     # probabilities
     pTh1_0 = 0.5
-    pTfh_0 = 0.2
+    pTfh_0 = 0.1
     pTr1_0 = 0.001
-    pPrec_0 = 1-pTh1_0-pTfh_0-pTr1_0
+    pTfhc_0 = 0.05
+    pPrec_0 = 1-pTh1_0-pTfh_0-pTr1_0-pTfhc_0
 
     # calculate feedback on probability
     fb_stren_pos = 2.0
@@ -112,19 +116,21 @@ model test
     pTh1_fb := pTh1_0*prob_feedback(IL10+IL10_ex, fb_stren_neg, EC50_IL10)
     pTfh_fb := pTfh_0*prob_feedback(IL2, fb_stren_neg, EC50_IL2)
     pTr1_fb := pTr1_0*prob_feedback(IL10+IL10_ex, fb_stren_pos, EC50_IL10)
+    pTfhc_fb := pTfhc_0*pos_feedback(TCR, EC50_TCR)
 
     # normalize probabilities
-    prob_Th1 := pTh1_fb / (pTh1_fb+pTfh_fb+pTr1_fb+pPrec_0)
-    prob_Tfh := pTfh_fb / (pTh1_fb+pTfh_fb+pTr1_fb+pPrec_0)
-    prob_Tr1 := pTr1_fb / (pTh1_fb+pTfh_fb+pTr1_fb+pPrec_0)
-    prob_Prec := pPrec_0 / (pTh1_fb+pTfh_fb+pTr1_fb+pPrec_0)
+    prob_Th1 := pTh1_fb / (pTfhc_fb+pTh1_fb+pTfh_fb+pTr1_fb+pPrec_0)
+    prob_Tfh := pTfh_fb / (pTfhc_fb+pTh1_fb+pTfh_fb+pTr1_fb+pPrec_0)
+    prob_Tr1 := pTr1_fb / (pTfhc_fb+pTh1_fb+pTfh_fb+pTr1_fb+pPrec_0)
+    prob_Prec := pPrec_0 / (pTfhc_fb+pTh1_fb+pTfh_fb+pTr1_fb+pPrec_0)
+    prob_Tfh_chronic := pTfhc_fb / (pTfhc_fb+pTh1_fb+pTfh_fb+pTr1_fb+pPrec_0)
 
     # death
     death_Prec = 0.24
     death_Th1 = 0.24
     death_Tfh = 0.24
     death_Tr1 = 0.24
-    death_Tfh_chronic = 0.24
+    death_Tfh_chronic = 0
 
     # molecule kinetics
     r_IFNI = 0.1
@@ -169,6 +175,7 @@ model test
     Th1_chronic = 0
     Tfh = 0
     Tfh_chronic = 0
+    gcTfh_chronic = 0
     Tr1 = 0
     Th1_mem = 0
     gcTfh = 0
