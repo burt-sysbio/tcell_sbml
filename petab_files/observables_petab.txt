@@ -1,0 +1,3 @@
+observableId	observableFormula
+Tfh_count	Tfh+Tfh_mem+gcTfh
+Th1_count	Th1+Th1noIL2+Th1_mem+Tr1

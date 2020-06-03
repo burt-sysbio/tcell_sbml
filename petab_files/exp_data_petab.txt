@@ -1,0 +1,13 @@
+observableId	preequilibrationConditionId	simulationConditionId	measurement	time
+Tfh_count		model1_data1	1.20E+06	9
+Tfh_count		model1_data1	8.07E+04	30
+Tfh_count		model1_data1	3.42E+04	60
+Th1_count		model1_data1	1.84E+06	9
+Th1_count		model1_data1	7.75E+04	30
+Th1_count		model1_data1	7.44E+04	60
+Tfh_count		model1_data2	7.98E+04	9
+Tfh_count		model1_data2	1.22E+05	30
+Tfh_count		model1_data2	7.69E+04	60
+Th1_count		model1_data2	2.83E+05	9
+Th1_count		model1_data2	1.22E+05	30
+Th1_count		model1_data2	3.70E+04	60

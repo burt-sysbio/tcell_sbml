@@ -1,0 +1,1032 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sbml xmlns="http://www.sbml.org/sbml/level3/version1/core" level="3" version="1">
+  <model metaid="test" id="test">
+    <listOfFunctionDefinitions>
+      <functionDefinition id="cyto_conv">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <lambda>
+            <bvar>
+              <ci> rate </ci>
+            </bvar>
+            <apply>
+              <divide/>
+              <apply>
+                <times/>
+                <ci> rate </ci>
+                <cn type="integer"> 1000000 </cn>
+                <cn> 1000000000000 </cn>
+              </apply>
+              <apply>
+                <times/>
+                <cn type="e-notation"> 1 <sep/> 23 </cn>
+                <cn> 6.02 </cn>
+              </apply>
+            </apply>
+          </lambda>
+        </math>
+      </functionDefinition>
+      <functionDefinition id="mol_to_molecules">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <lambda>
+            <bvar>
+              <ci> mol </ci>
+            </bvar>
+            <apply>
+              <divide/>
+              <apply>
+                <times/>
+                <ci> mol </ci>
+                <cn> 6.02 </cn>
+                <cn type="e-notation"> 1 <sep/> 23 </cn>
+              </apply>
+              <apply>
+                <times/>
+                <cn type="integer"> 1000000 </cn>
+                <cn> 1000000000000 </cn>
+              </apply>
+            </apply>
+          </lambda>
+        </math>
+      </functionDefinition>
+      <functionDefinition id="pos_feedback">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <lambda>
+            <bvar>
+              <ci> cyto </ci>
+            </bvar>
+            <bvar>
+              <ci> EC50 </ci>
+            </bvar>
+            <apply>
+              <plus/>
+              <apply>
+                <divide/>
+                <ci> cyto </ci>
+                <apply>
+                  <plus/>
+                  <ci> cyto </ci>
+                  <ci> EC50 </ci>
+                </apply>
+              </apply>
+              <cn> 0.0001 </cn>
+            </apply>
+          </lambda>
+        </math>
+      </functionDefinition>
+      <functionDefinition id="prob_feedback">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <lambda>
+            <bvar>
+              <ci> conc </ci>
+            </bvar>
+            <bvar>
+              <ci> fbstren </ci>
+            </bvar>
+            <bvar>
+              <ci> EC50 </ci>
+            </bvar>
+            <apply>
+              <plus/>
+              <apply>
+                <divide/>
+                <apply>
+                  <plus/>
+                  <apply>
+                    <times/>
+                    <ci> fbstren </ci>
+                    <ci> conc </ci>
+                  </apply>
+                  <ci> EC50 </ci>
+                </apply>
+                <apply>
+                  <plus/>
+                  <ci> conc </ci>
+                  <ci> EC50 </ci>
+                </apply>
+              </apply>
+              <cn> 0.0001 </cn>
+            </apply>
+          </lambda>
+        </math>
+      </functionDefinition>
+      <functionDefinition id="neg_feedback">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <lambda>
+            <bvar>
+              <ci> cyto </ci>
+            </bvar>
+            <bvar>
+              <ci> EC50 </ci>
+            </bvar>
+            <apply>
+              <plus/>
+              <apply>
+                <divide/>
+                <ci> EC50 </ci>
+                <apply>
+                  <plus/>
+                  <ci> cyto </ci>
+                  <ci> EC50 </ci>
+                </apply>
+              </apply>
+              <cn> 0.0001 </cn>
+            </apply>
+          </lambda>
+        </math>
+      </functionDefinition>
+    </listOfFunctionDefinitions>
+    <listOfParameters>
+      <parameter id="Naive" value="200" constant="false"/>
+      <parameter id="r_Naive" value="0.5" constant="true"/>
+      <parameter id="Precursor" value="0" constant="false"/>
+      <parameter id="prolif_Prec" value="5.57651757575758" constant="false"/>
+      <parameter id="prob_Prec" value="0.298979041569186" constant="false"/>
+      <parameter id="r_Prec" value="0.25" constant="true"/>
+      <parameter id="Precursor1" value="0" constant="false"/>
+      <parameter id="death_Prec" value="0.24" constant="true"/>
+      <parameter id="Th1" value="0" constant="false"/>
+      <parameter id="prob_Th1" value="0.500014948952079" constant="false"/>
+      <parameter id="prolif_Th1" value="1.90933091209091" constant="false"/>
+      <parameter id="death_Th1" value="0.24" constant="true"/>
+      <parameter id="r_Th1_noIL2" value="1" constant="true"/>
+      <parameter id="r_Th1_Tfh" value="0.166691666666667" constant="false"/>
+      <parameter id="r_Th1_Tr1" value="1.66691666666667e-05" constant="false"/>
+      <parameter id="Tfh" value="0" constant="false"/>
+      <parameter id="prob_Tfh" value="0.200005979580831" constant="false"/>
+      <parameter id="prolif_Tfh" value="1.90930090909091" constant="false"/>
+      <parameter id="Th1_noIL2" value="0" constant="false"/>
+      <parameter id="death_Tfh" value="0.24" constant="true"/>
+      <parameter id="r_gcTfh" value="0.25" constant="true"/>
+      <parameter id="r_Tfh_chronic" value="0" constant="true"/>
+      <parameter id="Tr1" value="0" constant="false"/>
+      <parameter id="prob_Tr1" value="0.00100002989790416" constant="false"/>
+      <parameter id="prolif_Tr1" value="1.90930090909091" constant="false"/>
+      <parameter id="death_Tr1" value="0.24" constant="true"/>
+      <parameter id="r_Mem" value="0.01" constant="true"/>
+      <parameter id="gcTfh" value="0" constant="false"/>
+      <parameter id="Tfh_chronic" value="0" constant="false"/>
+      <parameter id="death_Tfh_chronic" value="0.24" constant="true"/>
+      <parameter id="Th1_mem" value="0" constant="false"/>
+      <parameter id="Tfh_mem" value="0" constant="false"/>
+      <parameter id="Myc" value="1" constant="false"/>
+      <parameter id="deg_Myc" value="0.32" constant="true"/>
+      <parameter id="IL2_consumers" value="200" constant="false"/>
+      <parameter id="IL2_producers" value="200" constant="false"/>
+      <parameter id="IL10_consumers" value="0" constant="false"/>
+      <parameter id="IL2" value="0" constant="false"/>
+      <parameter id="r_IL2" value="864000" constant="true"/>
+      <parameter id="up_IL2" value="86400" constant="true"/>
+      <parameter id="KC_IL2" value="6020000" constant="true"/>
+      <parameter id="deg_IL2" value="2002.4" constant="true"/>
+      <parameter id="IL10" value="0" constant="false"/>
+      <parameter id="r_IL10" value="864000" constant="true"/>
+      <parameter id="up_IL10" value="86400" constant="true"/>
+      <parameter id="KC_IL10" value="6020000" constant="true"/>
+      <parameter id="deg_IL10" value="1002.4" constant="true"/>
+      <parameter id="IL10_ex" value="0" constant="false"/>
+      <parameter id="r_IL10_ex" value="10000" constant="true"/>
+      <parameter id="TCR" value="1" constant="false"/>
+      <parameter id="EC50_TCR" value="0.5" constant="true"/>
+      <parameter id="IFNI" value="0" constant="false"/>
+      <parameter id="EC50_IFNI" value="1" constant="true"/>
+      <parameter id="r_IFNI" value="0.1" constant="true"/>
+      <parameter id="deg_IFNI" value="1" constant="true"/>
+      <parameter id="deg_TCR" value="0.2" constant="true"/>
+      <parameter id="r_Th1_Tr1_base" value="0.25" constant="true"/>
+      <parameter id="r_Th1_Tfh_base" value="0.25" constant="true"/>
+      <parameter id="EC50_IL10" value="30100000" constant="true"/>
+      <parameter id="base_prolif0" value="2.1" constant="true"/>
+      <parameter id="prolif_cyto0" value="0.3" constant="true"/>
+      <parameter id="prolif_TCR0" value="5.5" constant="true"/>
+      <parameter id="base_prolif" value="1.90930090909091" constant="false"/>
+      <parameter id="EC50_Myc" value="0.1" constant="true"/>
+      <parameter id="prolif_cyto" value="3.0003e-05" constant="false"/>
+      <parameter id="EC50_IL2" value="3913000" constant="true"/>
+      <parameter id="prolif_TCR" value="3.66721666666667" constant="false"/>
+      <parameter id="pTh1_0" value="0.5" constant="true"/>
+      <parameter id="pTfh_0" value="0.2" constant="true"/>
+      <parameter id="pTr1_0" value="0.001" constant="true"/>
+      <parameter id="pPrec_0" value="0.299" constant="true"/>
+      <parameter id="fb_stren_pos" value="2" constant="true"/>
+      <parameter id="fb_stren_neg" value="0.5" constant="true"/>
+      <parameter id="pTh1_fb" value="0.50005" constant="false"/>
+      <parameter id="pTfh_fb" value="0.20002" constant="false"/>
+      <parameter id="pTr1_fb" value="0.0010001" constant="false"/>
+      <parameter id="deg_cyto_base" value="2.4" constant="true"/>
+      <parameter id="deg_IL2_consumers" value="2000" constant="true"/>
+      <parameter id="deg_IL10_consumers" value="1000" constant="true"/>
+      <parameter id="Th1_chronic" value="0" constant="true"/>
+    </listOfParameters>
+    <listOfInitialAssignments>
+      <initialAssignment symbol="r_IL2">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <times/>
+            <cn type="integer"> 10 </cn>
+            <cn type="integer"> 3600 </cn>
+            <cn type="integer"> 24 </cn>
+          </apply>
+        </math>
+      </initialAssignment>
+      <initialAssignment symbol="up_IL2">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <times/>
+            <cn type="integer"> 1 </cn>
+            <cn type="integer"> 3600 </cn>
+            <cn type="integer"> 24 </cn>
+          </apply>
+        </math>
+      </initialAssignment>
+      <initialAssignment symbol="KC_IL2">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <ci> mol_to_molecules </ci>
+            <cn type="integer"> 10 </cn>
+          </apply>
+        </math>
+      </initialAssignment>
+      <initialAssignment symbol="deg_IL2">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <plus/>
+            <ci> deg_cyto_base </ci>
+            <ci> deg_IL2_consumers </ci>
+          </apply>
+        </math>
+      </initialAssignment>
+      <initialAssignment symbol="r_IL10">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <times/>
+            <cn type="integer"> 10 </cn>
+            <cn type="integer"> 3600 </cn>
+            <cn type="integer"> 24 </cn>
+          </apply>
+        </math>
+      </initialAssignment>
+      <initialAssignment symbol="up_IL10">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <times/>
+            <cn type="integer"> 1 </cn>
+            <cn type="integer"> 3600 </cn>
+            <cn type="integer"> 24 </cn>
+          </apply>
+        </math>
+      </initialAssignment>
+      <initialAssignment symbol="KC_IL10">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <ci> mol_to_molecules </ci>
+            <cn type="integer"> 10 </cn>
+          </apply>
+        </math>
+      </initialAssignment>
+      <initialAssignment symbol="deg_IL10">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <plus/>
+            <ci> deg_cyto_base </ci>
+            <ci> deg_IL10_consumers </ci>
+          </apply>
+        </math>
+      </initialAssignment>
+      <initialAssignment symbol="EC50_IL10">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <ci> mol_to_molecules </ci>
+            <cn type="integer"> 50 </cn>
+          </apply>
+        </math>
+      </initialAssignment>
+      <initialAssignment symbol="EC50_IL2">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <ci> mol_to_molecules </ci>
+            <cn> 6.5 </cn>
+          </apply>
+        </math>
+      </initialAssignment>
+      <initialAssignment symbol="pPrec_0">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <minus/>
+            <apply>
+              <minus/>
+              <apply>
+                <minus/>
+                <cn type="integer"> 1 </cn>
+                <ci> pTh1_0 </ci>
+              </apply>
+              <ci> pTfh_0 </ci>
+            </apply>
+            <ci> pTr1_0 </ci>
+          </apply>
+        </math>
+      </initialAssignment>
+      <initialAssignment symbol="fb_stren_neg">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <divide/>
+            <cn type="integer"> 1 </cn>
+            <ci> fb_stren_pos </ci>
+          </apply>
+        </math>
+      </initialAssignment>
+      <initialAssignment symbol="deg_cyto_base">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <times/>
+            <cn> 0.1 </cn>
+            <cn type="integer"> 24 </cn>
+          </apply>
+        </math>
+      </initialAssignment>
+    </listOfInitialAssignments>
+    <listOfRules>
+      <rateRule variable="Naive">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <times/>
+            <apply>
+              <minus/>
+              <ci> r_Naive </ci>
+            </apply>
+            <ci> Naive </ci>
+          </apply>
+        </math>
+      </rateRule>
+      <rateRule variable="Precursor">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <minus/>
+            <apply>
+              <plus/>
+              <apply>
+                <times/>
+                <cn type="integer"> 2 </cn>
+                <ci> r_Naive </ci>
+                <ci> Naive </ci>
+              </apply>
+              <apply>
+                <times/>
+                <cn type="integer"> 2 </cn>
+                <ci> prolif_Prec </ci>
+                <ci> prob_Prec </ci>
+                <ci> r_Prec </ci>
+                <ci> Precursor1 </ci>
+              </apply>
+            </apply>
+            <apply>
+              <times/>
+              <apply>
+                <plus/>
+                <ci> r_Prec </ci>
+                <ci> death_Prec </ci>
+              </apply>
+              <ci> Precursor </ci>
+            </apply>
+          </apply>
+        </math>
+      </rateRule>
+      <assignmentRule variable="prolif_Prec">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <plus/>
+            <ci> base_prolif </ci>
+            <ci> prolif_TCR </ci>
+          </apply>
+        </math>
+      </assignmentRule>
+      <assignmentRule variable="prob_Prec">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <divide/>
+            <ci> pPrec_0 </ci>
+            <apply>
+              <plus/>
+              <ci> pTh1_fb </ci>
+              <ci> pTfh_fb </ci>
+              <ci> pTr1_fb </ci>
+              <ci> pPrec_0 </ci>
+            </apply>
+          </apply>
+        </math>
+      </assignmentRule>
+      <rateRule variable="Precursor1">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <minus/>
+            <apply>
+              <times/>
+              <ci> r_Prec </ci>
+              <ci> Precursor </ci>
+            </apply>
+            <apply>
+              <times/>
+              <apply>
+                <plus/>
+                <ci> r_Prec </ci>
+                <ci> death_Prec </ci>
+              </apply>
+              <ci> Precursor1 </ci>
+            </apply>
+          </apply>
+        </math>
+      </rateRule>
+      <rateRule variable="Th1">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <minus/>
+            <apply>
+              <plus/>
+              <apply>
+                <times/>
+                <cn type="integer"> 4 </cn>
+                <ci> prob_Th1 </ci>
+                <ci> r_Prec </ci>
+                <ci> Precursor1 </ci>
+              </apply>
+              <apply>
+                <times/>
+                <ci> prolif_Th1 </ci>
+                <ci> Th1 </ci>
+              </apply>
+            </apply>
+            <apply>
+              <times/>
+              <apply>
+                <plus/>
+                <ci> death_Th1 </ci>
+                <ci> r_Th1_noIL2 </ci>
+                <ci> r_Th1_Tfh </ci>
+                <ci> r_Th1_Tr1 </ci>
+              </apply>
+              <ci> Th1 </ci>
+            </apply>
+          </apply>
+        </math>
+      </rateRule>
+      <assignmentRule variable="prob_Th1">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <divide/>
+            <ci> pTh1_fb </ci>
+            <apply>
+              <plus/>
+              <ci> pTh1_fb </ci>
+              <ci> pTfh_fb </ci>
+              <ci> pTr1_fb </ci>
+              <ci> pPrec_0 </ci>
+            </apply>
+          </apply>
+        </math>
+      </assignmentRule>
+      <assignmentRule variable="prolif_Th1">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <plus/>
+            <ci> base_prolif </ci>
+            <ci> prolif_cyto </ci>
+          </apply>
+        </math>
+      </assignmentRule>
+      <assignmentRule variable="r_Th1_Tfh">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <times/>
+            <ci> r_Th1_Tfh_base </ci>
+            <apply>
+              <ci> pos_feedback </ci>
+              <ci> TCR </ci>
+              <ci> EC50_TCR </ci>
+            </apply>
+          </apply>
+        </math>
+      </assignmentRule>
+      <assignmentRule variable="r_Th1_Tr1">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <times/>
+            <ci> r_Th1_Tr1_base </ci>
+            <apply>
+              <ci> pos_feedback </ci>
+              <ci> TCR </ci>
+              <ci> EC50_TCR </ci>
+            </apply>
+            <apply>
+              <ci> pos_feedback </ci>
+              <apply>
+                <plus/>
+                <ci> IL10 </ci>
+                <ci> IL10_ex </ci>
+              </apply>
+              <ci> EC50_IL10 </ci>
+            </apply>
+          </apply>
+        </math>
+      </assignmentRule>
+      <rateRule variable="Tfh">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <minus/>
+            <apply>
+              <plus/>
+              <apply>
+                <times/>
+                <cn type="integer"> 4 </cn>
+                <ci> prob_Tfh </ci>
+                <ci> r_Prec </ci>
+                <ci> Precursor1 </ci>
+              </apply>
+              <apply>
+                <times/>
+                <ci> prolif_Tfh </ci>
+                <ci> Tfh </ci>
+              </apply>
+              <apply>
+                <times/>
+                <ci> r_Th1_Tfh </ci>
+                <apply>
+                  <plus/>
+                  <ci> Th1 </ci>
+                  <ci> Th1_noIL2 </ci>
+                </apply>
+              </apply>
+            </apply>
+            <apply>
+              <times/>
+              <apply>
+                <plus/>
+                <ci> death_Tfh </ci>
+                <ci> r_gcTfh </ci>
+                <ci> r_Tfh_chronic </ci>
+              </apply>
+              <ci> Tfh </ci>
+            </apply>
+          </apply>
+        </math>
+      </rateRule>
+      <assignmentRule variable="prob_Tfh">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <divide/>
+            <ci> pTfh_fb </ci>
+            <apply>
+              <plus/>
+              <ci> pTh1_fb </ci>
+              <ci> pTfh_fb </ci>
+              <ci> pTr1_fb </ci>
+              <ci> pPrec_0 </ci>
+            </apply>
+          </apply>
+        </math>
+      </assignmentRule>
+      <assignmentRule variable="prolif_Tfh">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <ci> base_prolif </ci>
+        </math>
+      </assignmentRule>
+      <rateRule variable="Th1_noIL2">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <minus/>
+            <apply>
+              <plus/>
+              <apply>
+                <times/>
+                <ci> r_Th1_noIL2 </ci>
+                <ci> Th1 </ci>
+              </apply>
+              <apply>
+                <times/>
+                <ci> prolif_Th1 </ci>
+                <ci> Th1_noIL2 </ci>
+              </apply>
+            </apply>
+            <apply>
+              <times/>
+              <apply>
+                <plus/>
+                <ci> death_Th1 </ci>
+                <ci> r_Mem </ci>
+                <ci> r_Th1_Tfh </ci>
+                <ci> r_Th1_Tr1 </ci>
+              </apply>
+              <ci> Th1_noIL2 </ci>
+            </apply>
+          </apply>
+        </math>
+      </rateRule>
+      <rateRule variable="Tr1">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <minus/>
+            <apply>
+              <plus/>
+              <apply>
+                <times/>
+                <cn type="integer"> 4 </cn>
+                <ci> prob_Tr1 </ci>
+                <ci> r_Prec </ci>
+                <ci> Precursor1 </ci>
+              </apply>
+              <apply>
+                <times/>
+                <ci> prolif_Tr1 </ci>
+                <ci> Tr1 </ci>
+              </apply>
+              <apply>
+                <times/>
+                <ci> r_Th1_Tr1 </ci>
+                <apply>
+                  <plus/>
+                  <ci> Th1 </ci>
+                  <ci> Th1_noIL2 </ci>
+                </apply>
+              </apply>
+            </apply>
+            <apply>
+              <times/>
+              <ci> death_Tr1 </ci>
+              <ci> Tr1 </ci>
+            </apply>
+          </apply>
+        </math>
+      </rateRule>
+      <assignmentRule variable="prob_Tr1">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <divide/>
+            <ci> pTr1_fb </ci>
+            <apply>
+              <plus/>
+              <ci> pTh1_fb </ci>
+              <ci> pTfh_fb </ci>
+              <ci> pTr1_fb </ci>
+              <ci> pPrec_0 </ci>
+            </apply>
+          </apply>
+        </math>
+      </assignmentRule>
+      <assignmentRule variable="prolif_Tr1">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <ci> base_prolif </ci>
+        </math>
+      </assignmentRule>
+      <rateRule variable="gcTfh">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <minus/>
+            <apply>
+              <plus/>
+              <apply>
+                <times/>
+                <ci> r_gcTfh </ci>
+                <ci> Tfh </ci>
+              </apply>
+              <apply>
+                <times/>
+                <ci> prolif_Tfh </ci>
+                <ci> gcTfh </ci>
+              </apply>
+            </apply>
+            <apply>
+              <times/>
+              <apply>
+                <plus/>
+                <ci> death_Tfh </ci>
+                <ci> r_Mem </ci>
+                <ci> r_Tfh_chronic </ci>
+              </apply>
+              <ci> gcTfh </ci>
+            </apply>
+          </apply>
+        </math>
+      </rateRule>
+      <rateRule variable="Tfh_chronic">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <minus/>
+            <apply>
+              <times/>
+              <ci> r_Tfh_chronic </ci>
+              <apply>
+                <plus/>
+                <ci> Tfh </ci>
+                <ci> gcTfh </ci>
+              </apply>
+            </apply>
+            <apply>
+              <times/>
+              <ci> death_Tfh_chronic </ci>
+              <ci> Tfh_chronic </ci>
+            </apply>
+          </apply>
+        </math>
+      </rateRule>
+      <rateRule variable="Th1_mem">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <times/>
+            <ci> r_Mem </ci>
+            <ci> Th1_noIL2 </ci>
+          </apply>
+        </math>
+      </rateRule>
+      <rateRule variable="Tfh_mem">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <times/>
+            <ci> r_Mem </ci>
+            <ci> gcTfh </ci>
+          </apply>
+        </math>
+      </rateRule>
+      <rateRule variable="Myc">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <times/>
+            <apply>
+              <minus/>
+              <ci> deg_Myc </ci>
+            </apply>
+            <ci> Myc </ci>
+          </apply>
+        </math>
+      </rateRule>
+      <assignmentRule variable="IL2_consumers">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <plus/>
+            <ci> Naive </ci>
+            <ci> Precursor </ci>
+            <ci> Precursor1 </ci>
+            <ci> Th1 </ci>
+            <ci> Th1_noIL2 </ci>
+          </apply>
+        </math>
+      </assignmentRule>
+      <assignmentRule variable="IL2_producers">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <plus/>
+            <ci> Naive </ci>
+            <ci> Precursor </ci>
+            <ci> Precursor1 </ci>
+            <ci> Th1 </ci>
+            <ci> Tfh </ci>
+          </apply>
+        </math>
+      </assignmentRule>
+      <assignmentRule variable="IL10_consumers">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <plus/>
+            <ci> Precursor </ci>
+            <ci> Precursor1 </ci>
+            <ci> Th1 </ci>
+            <ci> Th1_noIL2 </ci>
+            <ci> Tr1 </ci>
+          </apply>
+        </math>
+      </assignmentRule>
+      <rateRule variable="IL2">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <minus/>
+            <apply>
+              <minus/>
+              <apply>
+                <times/>
+                <ci> r_IL2 </ci>
+                <ci> IL2_producers </ci>
+              </apply>
+              <apply>
+                <times/>
+                <ci> up_IL2 </ci>
+                <ci> IL2_consumers </ci>
+                <apply>
+                  <divide/>
+                  <ci> IL2 </ci>
+                  <apply>
+                    <plus/>
+                    <ci> IL2 </ci>
+                    <ci> KC_IL2 </ci>
+                  </apply>
+                </apply>
+              </apply>
+            </apply>
+            <apply>
+              <times/>
+              <ci> deg_IL2 </ci>
+              <ci> IL2 </ci>
+            </apply>
+          </apply>
+        </math>
+      </rateRule>
+      <rateRule variable="IL10">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <minus/>
+            <apply>
+              <minus/>
+              <apply>
+                <times/>
+                <ci> r_IL10 </ci>
+                <ci> Tr1 </ci>
+              </apply>
+              <apply>
+                <times/>
+                <ci> up_IL10 </ci>
+                <ci> IL10_consumers </ci>
+                <apply>
+                  <divide/>
+                  <ci> IL10 </ci>
+                  <apply>
+                    <plus/>
+                    <ci> IL10 </ci>
+                    <ci> KC_IL10 </ci>
+                  </apply>
+                </apply>
+              </apply>
+            </apply>
+            <apply>
+              <times/>
+              <ci> deg_IL10 </ci>
+              <ci> IL10 </ci>
+            </apply>
+          </apply>
+        </math>
+      </rateRule>
+      <rateRule variable="IL10_ex">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <minus/>
+            <apply>
+              <minus/>
+              <apply>
+                <times/>
+                <ci> r_IL10_ex </ci>
+                <apply>
+                  <ci> pos_feedback </ci>
+                  <ci> TCR </ci>
+                  <ci> EC50_TCR </ci>
+                </apply>
+                <apply>
+                  <ci> pos_feedback </ci>
+                  <ci> IFNI </ci>
+                  <ci> EC50_IFNI </ci>
+                </apply>
+              </apply>
+              <apply>
+                <times/>
+                <ci> up_IL10 </ci>
+                <ci> IL10_consumers </ci>
+                <apply>
+                  <divide/>
+                  <ci> IL10_ex </ci>
+                  <apply>
+                    <plus/>
+                    <ci> IL10_ex </ci>
+                    <ci> KC_IL10 </ci>
+                  </apply>
+                </apply>
+              </apply>
+            </apply>
+            <apply>
+              <times/>
+              <ci> deg_IL10 </ci>
+              <ci> IL10_ex </ci>
+            </apply>
+          </apply>
+        </math>
+      </rateRule>
+      <rateRule variable="TCR">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <times/>
+            <apply>
+              <minus/>
+              <ci> deg_TCR </ci>
+            </apply>
+            <ci> TCR </ci>
+          </apply>
+        </math>
+      </rateRule>
+      <rateRule variable="IFNI">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <minus/>
+            <ci> r_IFNI </ci>
+            <apply>
+              <times/>
+              <ci> deg_IFNI </ci>
+              <ci> IFNI </ci>
+              <csymbol encoding="text" definitionURL="http://www.sbml.org/sbml/symbols/time"> time </csymbol>
+            </apply>
+          </apply>
+        </math>
+      </rateRule>
+      <assignmentRule variable="base_prolif">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <times/>
+            <ci> base_prolif0 </ci>
+            <apply>
+              <ci> pos_feedback </ci>
+              <ci> Myc </ci>
+              <ci> EC50_Myc </ci>
+            </apply>
+          </apply>
+        </math>
+      </assignmentRule>
+      <assignmentRule variable="prolif_cyto">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <times/>
+            <ci> prolif_cyto0 </ci>
+            <apply>
+              <ci> pos_feedback </ci>
+              <ci> IL2 </ci>
+              <ci> EC50_IL2 </ci>
+            </apply>
+            <apply>
+              <ci> neg_feedback </ci>
+              <apply>
+                <plus/>
+                <ci> IL10 </ci>
+                <ci> IL10_ex </ci>
+              </apply>
+              <ci> EC50_IL10 </ci>
+            </apply>
+          </apply>
+        </math>
+      </assignmentRule>
+      <assignmentRule variable="prolif_TCR">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <times/>
+            <ci> prolif_TCR0 </ci>
+            <apply>
+              <ci> pos_feedback </ci>
+              <ci> TCR </ci>
+              <ci> EC50_TCR </ci>
+            </apply>
+          </apply>
+        </math>
+      </assignmentRule>
+      <assignmentRule variable="pTh1_fb">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <times/>
+            <ci> pTh1_0 </ci>
+            <apply>
+              <ci> prob_feedback </ci>
+              <apply>
+                <plus/>
+                <ci> IL10 </ci>
+                <ci> IL10_ex </ci>
+              </apply>
+              <ci> fb_stren_neg </ci>
+              <ci> EC50_IL10 </ci>
+            </apply>
+          </apply>
+        </math>
+      </assignmentRule>
+      <assignmentRule variable="pTfh_fb">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <times/>
+            <ci> pTfh_0 </ci>
+            <apply>
+              <ci> prob_feedback </ci>
+              <ci> IL2 </ci>
+              <ci> fb_stren_neg </ci>
+              <ci> EC50_IL2 </ci>
+            </apply>
+          </apply>
+        </math>
+      </assignmentRule>
+      <assignmentRule variable="pTr1_fb">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <times/>
+            <ci> pTr1_0 </ci>
+            <apply>
+              <ci> prob_feedback </ci>
+              <apply>
+                <plus/>
+                <ci> IL10 </ci>
+                <ci> IL10_ex </ci>
+              </apply>
+              <ci> fb_stren_pos </ci>
+              <ci> EC50_IL10 </ci>
+            </apply>
+          </apply>
+        </math>
+      </assignmentRule>
+    </listOfRules>
+  </model>
+</sbml>

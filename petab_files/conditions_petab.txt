@@ -1,0 +1,3 @@
+conditionId	conditionName	TCR_deg
+model1_data1	arm_fahey	0.1
+model1_data2	cl13_fahey	0.00000001

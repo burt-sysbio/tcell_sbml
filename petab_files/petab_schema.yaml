@@ -1,0 +1,11 @@
+format_version: 1
+parameter_file: parameters_petab.tsv
+problems:
+- condition_files:
+  - exp_condition_petab.tsv
+  measurement_files:
+  - exp_data_petab.tsv
+  observable_files:
+  - observables_petab.tsv
+  sbml_files:
+  - tcell_sbml.xml
