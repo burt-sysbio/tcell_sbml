@@ -81,33 +81,35 @@ model test
     r_Th1_noIL2 = 1.0
     r_Th1_Tr1_base = 0.25
     r_Th1_Tfh_base = 0.25
-    r_Tfh_chronic0 = 0.1
+    r_Tfh_chronic0 = 10.0
     r_gcTfh = 0.25
-    r_Mem = 0.01
+    r_Mem = 0.004
 
     # differentiation rates
     r_Th1_Tr1 := r_Th1_Tr1_base*pos_feedback(TCR, EC50_TCR)*pos_feedback(IL10+IL10_ex, EC50_IL10)
-    r_Th1_Tfh := r_Th1_Tfh_base*pos_feedback(TCR, EC50_TCR) 
+    r_Th1_Tfh := r_Th1_Tfh_base*pos_feedback(TCR, EC50_TCR)
 
     # proliferation rates
-    base_prolif0 = 2.1
     prolif_cyto0 = 0.3
-    prolif_TCR0 = 6.5
-    
-    base_prolif := base_prolif0*pos_feedback(Myc, EC50_Myc)
+    prolif_TCR0 = 12.5
+ 	prolif_Th10 = 2.3
+ 	prolif_Tfh0 = 2.4
+ 	prolif_Prec0 = 2.3
+ 	prolif_Tr10 = 1.8
+
     prolif_cyto := prolif_cyto0*pos_feedback(IL2, EC50_IL2)*neg_feedback(IL10+IL10_ex, EC50_IL10)
     prolif_TCR := prolif_TCR0*pos_feedback(TCR, EC50_TCR)
     
-    prolif_Prec := base_prolif + prolif_TCR
-    prolif_Th1 := base_prolif + prolif_cyto 
-    prolif_Tr1 := base_prolif
-    prolif_Tfh := base_prolif
-
+    prolif_Prec := prolif_Prec0*pos_feedback(Myc, EC50_Myc) + prolif_TCR
+    prolif_Th1 := prolif_Th10*pos_feedback(Myc, EC50_Myc) + prolif_cyto 
+    prolif_Tfh := prolif_Tfh0*pos_feedback(Myc, EC50_Myc)
+    prolif_Tr1 := prolif_Tr10*pos_feedback(Myc, EC50_Myc)
+ 
     # probabilities
-    pTh1_0 = 0.5
-    pTfh_0 = 0.1
-    pTr1_0 = 0.001
-    pTfhc_0 = 0.05
+    pTh1_0 = 0.4
+    pTfh_0 = 0.2
+    pTr1_0 = 0.1
+    pTfhc_0 = 0.1
     pPrec_0 = 1-pTh1_0-pTfh_0-pTr1_0-pTfhc_0
 
     # calculate feedback on probability
@@ -129,8 +131,9 @@ model test
     death_Prec = 0.24
     death_Th1 = 0.24
     death_Tfh = 0.24
-    death_Tr1 = 0.24
-    death_Tfh_chronic = 0
+    death_chronic = 0.01
+    death_Tr1 = 0.07
+    death_Tfh_chronic = death_chronic
 
     # molecule kinetics
     r_IFNI = 0.1
@@ -139,10 +142,10 @@ model test
     deg_IFNI = 1.0
 
     deg_Myc = 0.32
-    
+    EC50_Myc = 0.1 
 
     # TCR signaling
-    deg_TCR = 0.2
+    deg_TCR = 10.0
 
     # cytokine production uptake degradation
     r_IL2 = 10.0*3600*24
@@ -163,7 +166,7 @@ model test
     # feedback effects
     EC50_IL2 = mol_to_molecules(6.5)
     EC50_IL10 = mol_to_molecules(50.0)
-    EC50_Myc = 0.1
+
     EC50_TCR = 0.5
  	
     # initial conditions

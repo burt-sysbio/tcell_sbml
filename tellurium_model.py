@@ -13,6 +13,7 @@ from scipy import constants
 sns.set(context = "poster")
 from datetime import date
 import os
+import pickle
 
 today = str(date.today())
 path = "tellurium_figs/"
@@ -96,23 +97,30 @@ with open(modelname, 'r') as myfile:
 r = te.loada(antimony_model)
 
 # =============================================================================
-# write current file to SBML
+# change parameters according to fitting result 
 # =============================================================================
-
-
+use_fit = False
+if use_fit == True:
+    with open('fit_result.p', 'rb') as fp:
+        fit_result = pickle.load(fp) 
+        print(fit_result)
+    for key, val in fit_result.items():
+        r[key]=val
+        print(r[key])
 # =============================================================================
 # run simulations             
 # =============================================================================
 arm_sim = r.simulate(0, 70, 200)
 
-# prep model for cl13 sim
-r.resetToOrigin()
+# reset variables, keep parameters
+r.reset()
 #r.r_IL10_ex = 100
 # change TCR signal level so that it does not decrease
-r.deg_TCR = 0.001
 # increase rate of IFN-I
+r.deg_TCR = 0.001
 r.r_IFNI = 1
 cl13_sim = r.simulate(0,70,200)
+
 r.resetToOrigin()
 
 
@@ -145,11 +153,11 @@ cytos = pd.concat([cytos_arm, cytos_cl13])
 # =============================================================================
 # cl13 vs arm celltypes
 # =============================================================================
-cells_eff = filter_cells(cells, ["Th1_all", "Tfh_all", "Tr1"])
+cells_eff = filter_cells(tidy_all, ["Precursors", "Th1_all", "Tfh_all", "Tr1"])
 g = sns.relplot(data = cells_eff, x = "time", y = "value", hue = "Infection",
-                col = "celltype", col_wrap = 3, kind = "line")
+                col = "celltype", col_wrap = 2, kind = "line")
 g.set(yscale = "log", ylabel = "cells", ylim = (1, None), xlabel = xlabel, xticks = xticks)
-g.savefig(path+today+"/celltype_kinetics.pdf")
+#g.savefig(path+today+"/celltype_kinetics.pdf")
 
 g = sns.relplot(data = cells_eff, x = "time", y = "value", col = "Infection",
                 hue = "celltype", kind = "line")
@@ -191,7 +199,7 @@ for ax, df in zip(g.axes.flat, data_fahey):
                     ax = ax, legend = False, palette = ["k", "0.5"])
  
     ax.set_ylabel("cells")
-g.savefig(path+today+"/Tfh_kinetics_fahey.pdf")    
+#g.savefig(path+today+"/Tfh_kinetics_fahey.pdf")    
 # =============================================================================
 # relative cells fahey et al
 # =============================================================================
@@ -209,4 +217,4 @@ for ax in g.axes.flat:
     ax.set_ylabel("% Tfh/(Th1+Tr1+Tfh)")
     
     
-g.savefig(path+today+"/Tfh_rel_fahey.pdf")
+#g.savefig(path+today+"/Tfh_rel_fahey.pdf")

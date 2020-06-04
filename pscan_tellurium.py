@@ -113,7 +113,7 @@ def plot_param_uncertainty2(model, startVal, name, num_sims = 20):
 def compute_cell_states(df):
     df["Precursors"] = df.Precursor + df.Precursor1
     df["Th1_all"] = df.Th1 + df.Th1_noIL2 + df.Th1_mem
-    df["Tfh_all"] = df.Tfh + df.Tfh_chronic + df.gcTfh + df.Tfh_mem
+    df["Tfh_all"] = df.Tfh + df.Tfh_chronic + df.gcTfh + df.gcTfh_chronic + df.Tfh_mem
     df["Total_CD4"] = df.Precursors + df.Th1_all + df.Tfh_all + df.Tr1
     df["Total_eff"] = df.Th1_all + df.Tfh_all + df.Tr1
     df["nonTfh"] = df.Th1_all+df.Tr1
