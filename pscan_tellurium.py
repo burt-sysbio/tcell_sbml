@@ -187,7 +187,7 @@ r = te.loada(antimony_model)
 startVals = r.getGlobalParameterValues()
 ids = r.getGlobalParameterIds()
 pnames = ["fb_stren_pos", "r_Th1_Tfh_base", "deg_IL10_consumers",
-          "deg_Myc", "EC50_TCR", "prolif_cyto0",
+          "prolif_Tr10", "prolif_cyto0", "prolif_Tfh0",
           "r_Th1_Tr1_base", "r_Prec", "r_Th1_noIL2"]
 
 arr = [(a,b) for a,b in zip(startVals, ids) if b in pnames]

@@ -167,3 +167,5 @@ for ax, df in zip(g.axes.flat, data_fahey):
                     ax = ax, legend = False, palette = ["k", "0.5"])
  
     ax.set_ylabel("cells")
+    
+g.savefig("tellurium_figs/tcell_modelfit.pdf")
