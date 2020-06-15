@@ -139,33 +139,43 @@
       <parameter id="Naive" value="200" constant="false"/>
       <parameter id="r_Naive" value="0.5" constant="true"/>
       <parameter id="Precursor" value="0" constant="false"/>
-      <parameter id="prolif_Prec" value="5.57651757575758" constant="false"/>
-      <parameter id="prob_Prec" value="0.298979041569186" constant="false"/>
+      <parameter id="prolif_Prec" value="10.4257224242424" constant="false"/>
+      <parameter id="prob_Prec" value="0.206879430667807" constant="false"/>
       <parameter id="r_Prec" value="0.25" constant="true"/>
       <parameter id="Precursor1" value="0" constant="false"/>
       <parameter id="death_Prec" value="0.24" constant="true"/>
       <parameter id="Th1" value="0" constant="false"/>
-      <parameter id="prob_Th1" value="0.500014948952079" constant="false"/>
-      <parameter id="prolif_Th1" value="1.90933091209091" constant="false"/>
+      <parameter id="prob_Th1" value="0.413800237221747" constant="false"/>
+      <parameter id="prolif_Th1" value="2.09116909390909" constant="false"/>
+      <parameter id="Th1_2" value="0" constant="false"/>
       <parameter id="death_Th1" value="0.24" constant="true"/>
       <parameter id="r_Th1_noIL2" value="1" constant="true"/>
       <parameter id="r_Th1_Tfh" value="0.166691666666667" constant="false"/>
       <parameter id="r_Th1_Tr1" value="1.66691666666667e-05" constant="false"/>
-      <parameter id="Tfh" value="0" constant="false"/>
-      <parameter id="prob_Tfh" value="0.200005979580831" constant="false"/>
-      <parameter id="prolif_Tfh" value="1.90930090909091" constant="false"/>
       <parameter id="Th1_noIL2" value="0" constant="false"/>
+      <parameter id="Th1_noIL2_2" value="0" constant="false"/>
+      <parameter id="r_Mem" value="0.004" constant="true"/>
+      <parameter id="Tfh" value="0" constant="false"/>
+      <parameter id="prob_Tfh" value="0.206900118610874" constant="false"/>
+      <parameter id="prolif_Tfh" value="2.18205818181818" constant="false"/>
+      <parameter id="Tfh_2" value="0" constant="false"/>
       <parameter id="death_Tfh" value="0.24" constant="true"/>
       <parameter id="r_gcTfh" value="0.25" constant="true"/>
-      <parameter id="r_Tfh_chronic" value="0" constant="true"/>
-      <parameter id="Tr1" value="0" constant="false"/>
-      <parameter id="prob_Tr1" value="0.00100002989790416" constant="false"/>
-      <parameter id="prolif_Tr1" value="1.90930090909091" constant="false"/>
-      <parameter id="death_Tr1" value="0.24" constant="true"/>
-      <parameter id="r_Mem" value="0.01" constant="true"/>
+      <parameter id="r_Tfh_chronic" value="6.66766666666667" constant="false"/>
+      <parameter id="r_Tfh_chronic0" value="10" constant="true"/>
+      <parameter id="TCR" value="1" constant="false"/>
+      <parameter id="EC50_TCR" value="0.5" constant="true"/>
       <parameter id="gcTfh" value="0" constant="false"/>
+      <parameter id="gcTfh_2" value="0" constant="false"/>
       <parameter id="Tfh_chronic" value="0" constant="false"/>
-      <parameter id="death_Tfh_chronic" value="0.24" constant="true"/>
+      <parameter id="prob_Tfh_chronic" value="0.0689701541941357" constant="false"/>
+      <parameter id="death_Tfh_chronic" value="0.01" constant="true"/>
+      <parameter id="gcTfh_chronic" value="0" constant="false"/>
+      <parameter id="Tr1" value="0" constant="false"/>
+      <parameter id="prob_Tr1" value="0.103450059305437" constant="false"/>
+      <parameter id="prolif_Tr1" value="1.63654363636364" constant="false"/>
+      <parameter id="Tr1_2" value="0" constant="false"/>
+      <parameter id="death_Tr1" value="0.07" constant="true"/>
       <parameter id="Th1_mem" value="0" constant="false"/>
       <parameter id="Tfh_mem" value="0" constant="false"/>
       <parameter id="Myc" value="1" constant="false"/>
@@ -185,39 +195,47 @@
       <parameter id="deg_IL10" value="1002.4" constant="true"/>
       <parameter id="IL10_ex" value="0" constant="false"/>
       <parameter id="r_IL10_ex" value="10000" constant="true"/>
-      <parameter id="TCR" value="1" constant="false"/>
-      <parameter id="EC50_TCR" value="0.5" constant="true"/>
       <parameter id="IFNI" value="0" constant="false"/>
       <parameter id="EC50_IFNI" value="1" constant="true"/>
       <parameter id="r_IFNI" value="0.1" constant="true"/>
       <parameter id="deg_IFNI" value="1" constant="true"/>
-      <parameter id="deg_TCR" value="0.2" constant="true"/>
+      <parameter id="deg_TCR" value="10" constant="true"/>
       <parameter id="r_Th1_Tr1_base" value="0.25" constant="true"/>
       <parameter id="r_Th1_Tfh_base" value="0.25" constant="true"/>
       <parameter id="EC50_IL10" value="30100000" constant="true"/>
-      <parameter id="base_prolif0" value="2.1" constant="true"/>
       <parameter id="prolif_cyto0" value="0.3" constant="true"/>
-      <parameter id="prolif_TCR0" value="5.5" constant="true"/>
-      <parameter id="base_prolif" value="1.90930090909091" constant="false"/>
-      <parameter id="EC50_Myc" value="0.1" constant="true"/>
+      <parameter id="prolif_TCR0" value="12.5" constant="true"/>
+      <parameter id="prolif_Th10" value="2.3" constant="true"/>
+      <parameter id="prolif_Tfh0" value="2.4" constant="true"/>
+      <parameter id="prolif_Prec0" value="2.3" constant="true"/>
+      <parameter id="prolif_Tr10" value="1.8" constant="true"/>
       <parameter id="prolif_cyto" value="3.0003e-05" constant="false"/>
       <parameter id="EC50_IL2" value="3913000" constant="true"/>
-      <parameter id="prolif_TCR" value="3.66721666666667" constant="false"/>
-      <parameter id="pTh1_0" value="0.5" constant="true"/>
+      <parameter id="prolif_TCR" value="8.33458333333333" constant="false"/>
+      <parameter id="EC50_Myc" value="0.1" constant="true"/>
+      <parameter id="pTh1_0" value="0.4" constant="true"/>
       <parameter id="pTfh_0" value="0.2" constant="true"/>
-      <parameter id="pTr1_0" value="0.001" constant="true"/>
-      <parameter id="pPrec_0" value="0.299" constant="true"/>
+      <parameter id="pTr1_0" value="0.1" constant="true"/>
+      <parameter id="pTfhc_0" value="0.1" constant="true"/>
+      <parameter id="pPrec_0" value="0.2" constant="true"/>
       <parameter id="fb_stren_pos" value="2" constant="true"/>
       <parameter id="fb_stren_neg" value="0.5" constant="true"/>
-      <parameter id="pTh1_fb" value="0.50005" constant="false"/>
+      <parameter id="pTh1_fb" value="0.40004" constant="false"/>
       <parameter id="pTfh_fb" value="0.20002" constant="false"/>
-      <parameter id="pTr1_fb" value="0.0010001" constant="false"/>
+      <parameter id="pTr1_fb" value="0.10001" constant="false"/>
+      <parameter id="pTfhc_fb" value="0.0666766666666667" constant="false"/>
+      <parameter id="death_chronic" value="0.01" constant="true"/>
       <parameter id="deg_cyto_base" value="2.4" constant="true"/>
       <parameter id="deg_IL2_consumers" value="2000" constant="true"/>
       <parameter id="deg_IL10_consumers" value="1000" constant="true"/>
       <parameter id="Th1_chronic" value="0" constant="true"/>
     </listOfParameters>
     <listOfInitialAssignments>
+      <initialAssignment symbol="death_Tfh_chronic">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <ci> death_chronic </ci>
+        </math>
+      </initialAssignment>
       <initialAssignment symbol="r_IL2">
         <math xmlns="http://www.w3.org/1998/Math/MathML">
           <apply>
@@ -316,12 +334,16 @@
               <minus/>
               <apply>
                 <minus/>
-                <cn type="integer"> 1 </cn>
-                <ci> pTh1_0 </ci>
+                <apply>
+                  <minus/>
+                  <cn type="integer"> 1 </cn>
+                  <ci> pTh1_0 </ci>
+                </apply>
+                <ci> pTfh_0 </ci>
               </apply>
-              <ci> pTfh_0 </ci>
+              <ci> pTr1_0 </ci>
             </apply>
-            <ci> pTr1_0 </ci>
+            <ci> pTfhc_0 </ci>
           </apply>
         </math>
       </initialAssignment>
@@ -394,7 +416,15 @@
         <math xmlns="http://www.w3.org/1998/Math/MathML">
           <apply>
             <plus/>
-            <ci> base_prolif </ci>
+            <apply>
+              <times/>
+              <ci> prolif_Prec0 </ci>
+              <apply>
+                <ci> pos_feedback </ci>
+                <ci> Myc </ci>
+                <ci> EC50_Myc </ci>
+              </apply>
+            </apply>
             <ci> prolif_TCR </ci>
           </apply>
         </math>
@@ -406,6 +436,7 @@
             <ci> pPrec_0 </ci>
             <apply>
               <plus/>
+              <ci> pTfhc_fb </ci>
               <ci> pTh1_fb </ci>
               <ci> pTfh_fb </ci>
               <ci> pTr1_fb </ci>
@@ -451,7 +482,15 @@
               <apply>
                 <times/>
                 <ci> prolif_Th1 </ci>
-                <ci> Th1 </ci>
+                <apply>
+                  <minus/>
+                  <apply>
+                    <times/>
+                    <cn type="integer"> 2 </cn>
+                    <ci> Th1_2 </ci>
+                  </apply>
+                  <ci> Th1 </ci>
+                </apply>
               </apply>
             </apply>
             <apply>
@@ -475,6 +514,7 @@
             <ci> pTh1_fb </ci>
             <apply>
               <plus/>
+              <ci> pTfhc_fb </ci>
               <ci> pTh1_fb </ci>
               <ci> pTfh_fb </ci>
               <ci> pTr1_fb </ci>
@@ -487,11 +527,46 @@
         <math xmlns="http://www.w3.org/1998/Math/MathML">
           <apply>
             <plus/>
-            <ci> base_prolif </ci>
+            <apply>
+              <times/>
+              <ci> prolif_Th10 </ci>
+              <apply>
+                <ci> pos_feedback </ci>
+                <ci> Myc </ci>
+                <ci> EC50_Myc </ci>
+              </apply>
+            </apply>
             <ci> prolif_cyto </ci>
           </apply>
         </math>
       </assignmentRule>
+      <rateRule variable="Th1_2">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <minus/>
+            <apply>
+              <times/>
+              <ci> prolif_Th1 </ci>
+              <apply>
+                <minus/>
+                <ci> Th1 </ci>
+                <ci> Th1_2 </ci>
+              </apply>
+            </apply>
+            <apply>
+              <times/>
+              <apply>
+                <plus/>
+                <ci> death_Th1 </ci>
+                <ci> r_Th1_noIL2 </ci>
+                <ci> r_Th1_Tfh </ci>
+                <ci> r_Th1_Tr1 </ci>
+              </apply>
+              <ci> Th1_2 </ci>
+            </apply>
+          </apply>
+        </math>
+      </rateRule>
       <assignmentRule variable="r_Th1_Tfh">
         <math xmlns="http://www.w3.org/1998/Math/MathML">
           <apply>
@@ -527,6 +602,72 @@
           </apply>
         </math>
       </assignmentRule>
+      <rateRule variable="Th1_noIL2">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <minus/>
+            <apply>
+              <plus/>
+              <apply>
+                <times/>
+                <ci> r_Th1_noIL2 </ci>
+                <ci> Th1 </ci>
+              </apply>
+              <apply>
+                <times/>
+                <ci> prolif_Th1 </ci>
+                <apply>
+                  <minus/>
+                  <apply>
+                    <times/>
+                    <cn type="integer"> 2 </cn>
+                    <ci> Th1_noIL2_2 </ci>
+                  </apply>
+                  <ci> Th1_noIL2 </ci>
+                </apply>
+              </apply>
+            </apply>
+            <apply>
+              <times/>
+              <apply>
+                <plus/>
+                <ci> death_Th1 </ci>
+                <ci> r_Mem </ci>
+                <ci> r_Th1_Tfh </ci>
+                <ci> r_Th1_Tr1 </ci>
+              </apply>
+              <ci> Th1_noIL2 </ci>
+            </apply>
+          </apply>
+        </math>
+      </rateRule>
+      <rateRule variable="Th1_noIL2_2">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <minus/>
+            <apply>
+              <times/>
+              <ci> prolif_Th1 </ci>
+              <apply>
+                <minus/>
+                <ci> Th1_noIL2 </ci>
+                <ci> Th1_noIL2_2 </ci>
+              </apply>
+            </apply>
+            <apply>
+              <times/>
+              <apply>
+                <plus/>
+                <ci> death_Th1 </ci>
+                <ci> r_Mem </ci>
+                <ci> r_Th1_Tfh </ci>
+                <ci> r_Th1_Tr1 </ci>
+              </apply>
+              <ci> Th1_noIL2_2 </ci>
+            </apply>
+          </apply>
+        </math>
+      </rateRule>
       <rateRule variable="Tfh">
         <math xmlns="http://www.w3.org/1998/Math/MathML">
           <apply>
@@ -543,7 +684,15 @@
               <apply>
                 <times/>
                 <ci> prolif_Tfh </ci>
-                <ci> Tfh </ci>
+                <apply>
+                  <minus/>
+                  <apply>
+                    <times/>
+                    <cn type="integer"> 2 </cn>
+                    <ci> Tfh_2 </ci>
+                  </apply>
+                  <ci> Tfh </ci>
+                </apply>
               </apply>
               <apply>
                 <times/>
@@ -575,6 +724,7 @@
             <ci> pTfh_fb </ci>
             <apply>
               <plus/>
+              <ci> pTfhc_fb </ci>
               <ci> pTh1_fb </ci>
               <ci> pTfh_fb </ci>
               <ci> pTr1_fb </ci>
@@ -585,10 +735,69 @@
       </assignmentRule>
       <assignmentRule variable="prolif_Tfh">
         <math xmlns="http://www.w3.org/1998/Math/MathML">
-          <ci> base_prolif </ci>
+          <apply>
+            <times/>
+            <ci> prolif_Tfh0 </ci>
+            <apply>
+              <ci> pos_feedback </ci>
+              <ci> Myc </ci>
+              <ci> EC50_Myc </ci>
+            </apply>
+          </apply>
         </math>
       </assignmentRule>
-      <rateRule variable="Th1_noIL2">
+      <rateRule variable="Tfh_2">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <minus/>
+            <apply>
+              <times/>
+              <ci> prolif_Tfh </ci>
+              <apply>
+                <minus/>
+                <ci> Tfh </ci>
+                <ci> Tfh_2 </ci>
+              </apply>
+            </apply>
+            <apply>
+              <times/>
+              <apply>
+                <plus/>
+                <ci> death_Tfh </ci>
+                <ci> r_gcTfh </ci>
+                <ci> r_Tfh_chronic </ci>
+              </apply>
+              <ci> Tfh_2 </ci>
+            </apply>
+          </apply>
+        </math>
+      </rateRule>
+      <assignmentRule variable="r_Tfh_chronic">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <times/>
+            <ci> r_Tfh_chronic0 </ci>
+            <apply>
+              <ci> pos_feedback </ci>
+              <ci> TCR </ci>
+              <ci> EC50_TCR </ci>
+            </apply>
+          </apply>
+        </math>
+      </assignmentRule>
+      <rateRule variable="TCR">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <times/>
+            <apply>
+              <minus/>
+              <ci> deg_TCR </ci>
+            </apply>
+            <ci> TCR </ci>
+          </apply>
+        </math>
+      </rateRule>
+      <rateRule variable="gcTfh">
         <math xmlns="http://www.w3.org/1998/Math/MathML">
           <apply>
             <minus/>
@@ -596,25 +805,129 @@
               <plus/>
               <apply>
                 <times/>
-                <ci> r_Th1_noIL2 </ci>
-                <ci> Th1 </ci>
+                <ci> r_gcTfh </ci>
+                <ci> Tfh </ci>
               </apply>
               <apply>
                 <times/>
-                <ci> prolif_Th1 </ci>
-                <ci> Th1_noIL2 </ci>
+                <ci> prolif_Tfh </ci>
+                <apply>
+                  <minus/>
+                  <apply>
+                    <times/>
+                    <cn type="integer"> 2 </cn>
+                    <ci> gcTfh_2 </ci>
+                  </apply>
+                  <ci> gcTfh </ci>
+                </apply>
               </apply>
             </apply>
             <apply>
               <times/>
               <apply>
                 <plus/>
-                <ci> death_Th1 </ci>
+                <ci> death_Tfh </ci>
                 <ci> r_Mem </ci>
-                <ci> r_Th1_Tfh </ci>
-                <ci> r_Th1_Tr1 </ci>
+                <ci> r_Tfh_chronic </ci>
               </apply>
-              <ci> Th1_noIL2 </ci>
+              <ci> gcTfh </ci>
+            </apply>
+          </apply>
+        </math>
+      </rateRule>
+      <rateRule variable="gcTfh_2">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <minus/>
+            <apply>
+              <times/>
+              <ci> prolif_Tfh </ci>
+              <apply>
+                <minus/>
+                <ci> gcTfh </ci>
+                <ci> gcTfh_2 </ci>
+              </apply>
+            </apply>
+            <apply>
+              <times/>
+              <apply>
+                <plus/>
+                <ci> death_Tfh </ci>
+                <ci> r_Mem </ci>
+                <ci> r_Tfh_chronic </ci>
+              </apply>
+              <ci> gcTfh_2 </ci>
+            </apply>
+          </apply>
+        </math>
+      </rateRule>
+      <rateRule variable="Tfh_chronic">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <minus/>
+            <apply>
+              <plus/>
+              <apply>
+                <times/>
+                <ci> prob_Tfh_chronic </ci>
+                <ci> r_Prec </ci>
+                <ci> Precursor1 </ci>
+              </apply>
+              <apply>
+                <times/>
+                <ci> r_Tfh_chronic </ci>
+                <ci> Tfh </ci>
+              </apply>
+            </apply>
+            <apply>
+              <times/>
+              <apply>
+                <plus/>
+                <ci> death_Tfh_chronic </ci>
+                <ci> r_gcTfh </ci>
+              </apply>
+              <ci> Tfh_chronic </ci>
+            </apply>
+          </apply>
+        </math>
+      </rateRule>
+      <assignmentRule variable="prob_Tfh_chronic">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <divide/>
+            <ci> pTfhc_fb </ci>
+            <apply>
+              <plus/>
+              <ci> pTfhc_fb </ci>
+              <ci> pTh1_fb </ci>
+              <ci> pTfh_fb </ci>
+              <ci> pTr1_fb </ci>
+              <ci> pPrec_0 </ci>
+            </apply>
+          </apply>
+        </math>
+      </assignmentRule>
+      <rateRule variable="gcTfh_chronic">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <minus/>
+            <apply>
+              <plus/>
+              <apply>
+                <times/>
+                <ci> r_Tfh_chronic </ci>
+                <ci> gcTfh </ci>
+              </apply>
+              <apply>
+                <times/>
+                <ci> r_gcTfh </ci>
+                <ci> Tfh_chronic </ci>
+              </apply>
+            </apply>
+            <apply>
+              <times/>
+              <ci> death_Tfh_chronic </ci>
+              <ci> gcTfh_chronic </ci>
             </apply>
           </apply>
         </math>
@@ -635,7 +948,15 @@
               <apply>
                 <times/>
                 <ci> prolif_Tr1 </ci>
-                <ci> Tr1 </ci>
+                <apply>
+                  <minus/>
+                  <apply>
+                    <times/>
+                    <cn type="integer"> 2 </cn>
+                    <ci> Tr1_2 </ci>
+                  </apply>
+                  <ci> Tr1 </ci>
+                </apply>
               </apply>
               <apply>
                 <times/>
@@ -662,6 +983,7 @@
             <ci> pTr1_fb </ci>
             <apply>
               <plus/>
+              <ci> pTfhc_fb </ci>
               <ci> pTh1_fb </ci>
               <ci> pTfh_fb </ci>
               <ci> pTr1_fb </ci>
@@ -672,56 +994,34 @@
       </assignmentRule>
       <assignmentRule variable="prolif_Tr1">
         <math xmlns="http://www.w3.org/1998/Math/MathML">
-          <ci> base_prolif </ci>
-        </math>
-      </assignmentRule>
-      <rateRule variable="gcTfh">
-        <math xmlns="http://www.w3.org/1998/Math/MathML">
           <apply>
-            <minus/>
+            <times/>
+            <ci> prolif_Tr10 </ci>
             <apply>
-              <plus/>
-              <apply>
-                <times/>
-                <ci> r_gcTfh </ci>
-                <ci> Tfh </ci>
-              </apply>
-              <apply>
-                <times/>
-                <ci> prolif_Tfh </ci>
-                <ci> gcTfh </ci>
-              </apply>
-            </apply>
-            <apply>
-              <times/>
-              <apply>
-                <plus/>
-                <ci> death_Tfh </ci>
-                <ci> r_Mem </ci>
-                <ci> r_Tfh_chronic </ci>
-              </apply>
-              <ci> gcTfh </ci>
+              <ci> pos_feedback </ci>
+              <ci> Myc </ci>
+              <ci> EC50_Myc </ci>
             </apply>
           </apply>
         </math>
-      </rateRule>
-      <rateRule variable="Tfh_chronic">
+      </assignmentRule>
+      <rateRule variable="Tr1_2">
         <math xmlns="http://www.w3.org/1998/Math/MathML">
           <apply>
             <minus/>
             <apply>
               <times/>
-              <ci> r_Tfh_chronic </ci>
+              <ci> prolif_Tr1 </ci>
               <apply>
-                <plus/>
-                <ci> Tfh </ci>
-                <ci> gcTfh </ci>
+                <minus/>
+                <ci> Tr1 </ci>
+                <ci> Tr1_2 </ci>
               </apply>
             </apply>
             <apply>
               <times/>
-              <ci> death_Tfh_chronic </ci>
-              <ci> Tfh_chronic </ci>
+              <ci> death_Tr1 </ci>
+              <ci> Tr1_2 </ci>
             </apply>
           </apply>
         </math>
@@ -764,7 +1064,9 @@
             <ci> Precursor </ci>
             <ci> Precursor1 </ci>
             <ci> Th1 </ci>
+            <ci> Th1_2 </ci>
             <ci> Th1_noIL2 </ci>
+            <ci> Th1_noIL2_2 </ci>
           </apply>
         </math>
       </assignmentRule>
@@ -776,7 +1078,9 @@
             <ci> Precursor </ci>
             <ci> Precursor1 </ci>
             <ci> Th1 </ci>
+            <ci> Th1_2 </ci>
             <ci> Tfh </ci>
+            <ci> Tfh_2 </ci>
           </apply>
         </math>
       </assignmentRule>
@@ -787,8 +1091,11 @@
             <ci> Precursor </ci>
             <ci> Precursor1 </ci>
             <ci> Th1 </ci>
+            <ci> Th1_2 </ci>
             <ci> Th1_noIL2 </ci>
+            <ci> Th1_noIL2_2 </ci>
             <ci> Tr1 </ci>
+            <ci> Tr1_2 </ci>
           </apply>
         </math>
       </assignmentRule>
@@ -903,18 +1210,6 @@
           </apply>
         </math>
       </rateRule>
-      <rateRule variable="TCR">
-        <math xmlns="http://www.w3.org/1998/Math/MathML">
-          <apply>
-            <times/>
-            <apply>
-              <minus/>
-              <ci> deg_TCR </ci>
-            </apply>
-            <ci> TCR </ci>
-          </apply>
-        </math>
-      </rateRule>
       <rateRule variable="IFNI">
         <math xmlns="http://www.w3.org/1998/Math/MathML">
           <apply>
@@ -929,19 +1224,6 @@
           </apply>
         </math>
       </rateRule>
-      <assignmentRule variable="base_prolif">
-        <math xmlns="http://www.w3.org/1998/Math/MathML">
-          <apply>
-            <times/>
-            <ci> base_prolif0 </ci>
-            <apply>
-              <ci> pos_feedback </ci>
-              <ci> Myc </ci>
-              <ci> EC50_Myc </ci>
-            </apply>
-          </apply>
-        </math>
-      </assignmentRule>
       <assignmentRule variable="prolif_cyto">
         <math xmlns="http://www.w3.org/1998/Math/MathML">
           <apply>
@@ -1023,6 +1305,19 @@
               </apply>
               <ci> fb_stren_pos </ci>
               <ci> EC50_IL10 </ci>
+            </apply>
+          </apply>
+        </math>
+      </assignmentRule>
+      <assignmentRule variable="pTfhc_fb">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <times/>
+            <ci> pTfhc_0 </ci>
+            <apply>
+              <ci> pos_feedback </ci>
+              <ci> TCR </ci>
+              <ci> EC50_TCR </ci>
             </apply>
           </apply>
         </math>

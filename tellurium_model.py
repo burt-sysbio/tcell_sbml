@@ -36,11 +36,12 @@ def filter_cells(cells, names):
 
 def compute_cell_states(df):
     df["Precursors"] = df.Precursor + df.Precursor1
-    df["Th1_all"] = df.Th1 + df.Th1_noIL2 + df.Th1_mem
-    df["Tfh_all"] = df.Tfh + df.Tfh_chronic + df.gcTfh + df.gcTfh_chronic + df.Tfh_mem
-    df["Total_CD4"] = df.Precursors + df.Th1_all + df.Tfh_all + df.Tr1
-    df["Total_eff"] = df.Th1_all + df.Tfh_all + df.Tr1
-    df["nonTfh"] = df.Th1_all+df.Tr1
+    df["Th1_all"] = df.Th1 + df.Th1_2 + df.Th1_noIL2 + df.Th1_noIL2_2 + df.Th1_mem
+    df["Tfh_all"] = df.Tfh + df.Tfh_2 + df.Tfh_chronic + df.gcTfh + df.gcTfh_2 + df.gcTfh_chronic + df.Tfh_mem
+    df["Total_CD4"] = df.Precursors + df.Th1_all + df.Tfh_all + df.Tr1 + df.Tr1_2
+    df["Total_eff"] = df.Th1_all + df.Tfh_all + df.Tr1 + df.Tr1_2
+    df["nonTfh"] = df.Th1_all+df.Tr1+df.Tr1_2
+    df["Tr1"] = df.Tr1 + df.Tr1+df.Tr1_2
     return df
 
 def get_conc(cyto):
@@ -145,7 +146,7 @@ tidy_all = pd.concat([tidy_arm, tidy_cl13])
 g = sns.relplot(data = tidy_all, x = "time", y = "value", col = "celltype",
                 col_wrap = 8, hue = "Infection", kind = "line", facet_kws = {"sharey" : False})
 g.set(yscale = "log", ylim = (0.01, None), xlabel = xlabel, xticks = xticks)
-
+g.savefig(path+today+"/all_species_timecourse.pdf")
 
 cells = pd.concat([cells_arm, cells_cl13])
 cytos = pd.concat([cytos_arm, cytos_cl13])
@@ -157,7 +158,7 @@ cells_eff = filter_cells(tidy_all, ["Precursors", "Th1_all", "Tfh_all", "Tr1"])
 g = sns.relplot(data = cells_eff, x = "time", y = "value", hue = "Infection",
                 col = "celltype", col_wrap = 2, kind = "line")
 g.set(yscale = "log", ylabel = "cells", ylim = (1, None), xlabel = xlabel, xticks = xticks)
-#g.savefig(path+today+"/celltype_kinetics.pdf")
+g.savefig(path+today+"/celltype_kinetics.pdf")
 
 g = sns.relplot(data = cells_eff, x = "time", y = "value", col = "Infection",
                 hue = "celltype", kind = "line")
@@ -199,7 +200,7 @@ for ax, df in zip(g.axes.flat, data_fahey):
                     ax = ax, legend = False, palette = ["k", "0.5"])
  
     ax.set_ylabel("cells")
-#g.savefig(path+today+"/Tfh_kinetics_fahey.pdf")    
+g.savefig(path+today+"/Tfh_kinetics_fahey.pdf")    
 # =============================================================================
 # relative cells fahey et al
 # =============================================================================
@@ -217,4 +218,4 @@ for ax in g.axes.flat:
     ax.set_ylabel("% Tfh/(Th1+Tr1+Tfh)")
     
     
-#g.savefig(path+today+"/Tfh_rel_fahey.pdf")
+g.savefig(path+today+"/Tfh_rel_fahey.pdf")

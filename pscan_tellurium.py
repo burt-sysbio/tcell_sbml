@@ -61,11 +61,11 @@ def plot_param_uncertainty(model, startVal, name, ax, num_sims = 20):
     df_cl13 = pd.concat(df_cl13)
     
     sns.lineplot(data = df_arm, x = "time", y = "total", hue = "val",
-                 palette = "Reds", ax = ax, legend = False)
+                 palette = "Blues", ax = ax, legend = False)
 
     
     sns.lineplot(data = df_cl13, x = "time", y = "total", hue = "val",
-                 palette = "Blues", ax = ax, legend = False)
+                 palette = "Reds", ax = ax, legend = False)
     
     ax.set_xlabel(name)
     ax.set_ylabel("Tfh (% of total)")
@@ -112,11 +112,12 @@ def plot_param_uncertainty2(model, startVal, name, num_sims = 20):
 
 def compute_cell_states(df):
     df["Precursors"] = df.Precursor + df.Precursor1
-    df["Th1_all"] = df.Th1 + df.Th1_noIL2 + df.Th1_mem
-    df["Tfh_all"] = df.Tfh + df.Tfh_chronic + df.gcTfh + df.gcTfh_chronic + df.Tfh_mem
-    df["Total_CD4"] = df.Precursors + df.Th1_all + df.Tfh_all + df.Tr1
-    df["Total_eff"] = df.Th1_all + df.Tfh_all + df.Tr1
-    df["nonTfh"] = df.Th1_all+df.Tr1
+    df["Th1_all"] = df.Th1 + df.Th1_2 + df.Th1_noIL2 + df.Th1_noIL2_2 + df.Th1_mem
+    df["Tfh_all"] = df.Tfh + df.Tfh_2 + df.Tfh_chronic + df.gcTfh + df.gcTfh_2 + df.gcTfh_chronic + df.Tfh_mem
+    df["Total_CD4"] = df.Precursors + df.Th1_all + df.Tfh_all + df.Tr1 + df.Tr1_2
+    df["Total_eff"] = df.Th1_all + df.Tfh_all + df.Tr1 + df.Tr1_2
+    df["nonTfh"] = df.Th1_all+df.Tr1+df.Tr1_2
+    df["Tr1"] = df.Tr1 + df.Tr1+df.Tr1_2
     return df
 
 
@@ -188,12 +189,13 @@ startVals = r.getGlobalParameterValues()
 ids = r.getGlobalParameterIds()
 pnames = ["fb_stren_pos", "r_Th1_Tfh_base", "deg_IL10_consumers",
           "prolif_Tr10", "prolif_cyto0", "prolif_Tfh0",
-          "r_Th1_Tr1_base", "r_Prec", "r_Th1_noIL2"]
+          "r_Th1_Tr1_base", "r_Prec", "r_Th1_noIL2",
+          "prolif_Th10", "deg_IL2_consumers", "r_Tfh_chronic0"]
 
 arr = [(a,b) for a,b in zip(startVals, ids) if b in pnames]
 
 
-fig, axes = plt.subplots(3,3)
+fig, axes = plt.subplots(4,3)
 for ax, a in zip(axes.flatten(), arr):
     plot_param_uncertainty(r, a[0], a[1], ax)
 
