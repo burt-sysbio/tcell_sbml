@@ -1,0 +1,152 @@
+function pos_feedback(cyto, EC50)
+	(cyto/(cyto+EC50))+0.0001
+end
+
+
+function prob_feedback(conc, fbstren, EC50)
+	((fbstren*conc+EC50)/(conc+EC50))+0.0001
+end
+
+
+function neg_feedback(cyto, EC50)
+	(EC50/(cyto+EC50))+0.0001
+end
+
+model test
+	########################## ODE cells ##############################################################
+	###################################################################################################
+	###################################################################################################
+    # naive differentiation
+    Naive' = -r_Naive*Naive
+    Prec' = 2*r_Naive*Naive + (2*prolif_Prec*prob_Prec*r_Prec)*Prec1 - (r_Prec+death_Prec)*Prec
+
+    # precursor differentiation
+    Prec1' = r_Prec*Prec - (r_Prec+death_Prec)*Prec1
+
+    # effector differentiation
+    Th1' = n_div*prob_Th1*r_Prec*Prec1 + prolif_Th1*(2*Th1_2-Th1) - death_Th1*Th1
+    Th1_2' = prolif_Th1*(Th1-Th1_2) - (death_Th1+r_Mem)*Th1_2 
+
+    Tfh' = n_div*prob_Tfh*r_Prec*Prec1 + prolif_Tfh*(2*Tfh_2-Tfh) - death_Tfh*Tfh
+    Tfh_2' = prolif_Tfh*(Tfh-Tfh_2) - (death_Tfh+r_Mem)*Tfh_2
+
+    # chronic Tfh
+    Tfhc' = n_div*prob_Tfhc*r_Prec*Prec1 + prolif_Tfhc*(2*Tfhc_2-Tfhc) - death_Tfhc*Tfhc
+    Tfhc_2' = prolif_Tfhc*(Tfhc-Tfhc_2) - death_Tfhc*Tfhc_2
+    
+    # Tr1 cells
+    Tr1' = n_div*prob_Tr1*r_Prec*Prec1 + prolif_Tr1*(2*Tr1_2-Tr1) - death_Tr1*Tr1
+    Tr1_2' = prolif_Tr1*(Tr1-Tr1_2) - death_Tr1*Tr1_2
+
+
+    # memory
+    Th1_mem' = r_Mem*Th1_2
+    Tfh_mem' = r_Mem*Tfh_2
+
+	########################## ODE molecules ##########################################################
+	###################################################################################################
+	###################################################################################################
+ 
+    # molecules
+    Myc' = -deg_Myc*Myc
+
+    # antigen
+    TCR' = -deg_TCR*TCR
+
+
+	########################## algebraic relation proliferation #############################
+	###################################################################################################
+	###################################################################################################
+    prolif_TCR := prolif_TCR_base*pos_feedback(TCR, EC50_TCR)  
+    prolif_Prec := prolif_Prec_base*pos_feedback(Myc, EC50_Myc) + prolif_TCR
+    prolif_Th1 := prolif_Th1_base*pos_feedback(Myc, EC50_Myc)
+    prolif_Tfh := prolif_Tfh_base*pos_feedback(Myc, EC50_Myc)
+    prolif_Tr1 := prolif_Tr1_base*pos_feedback(Myc, EC50_Myc)
+    prolif_Tfhc := prolif_Tfhc_base*pos_feedback(Myc, EC50_Myc)
+    
+	########################## algebraic relation probability #############################
+	###################################################################################################
+	###################################################################################################
+    pTh1_fb := pTh1_base*prob_feedback(TCR, fb_stren_neg, EC50_TCR)
+    pTfh_fb := pTfh_base*prob_feedback(TCR, fb_stren_neg, EC50_TCR)
+    pTr1_fb := pTr1_base*prob_feedback(TCR, fb_stren_pos, EC50_TCR)
+    pTfhc_fb := pTfhc_base*prob_feedback(TCR, fb_stren_pos, EC50_TCR)
+
+    # normalize probabilities
+    prob_Th1 := pTh1_fb / (pTfhc_fb+pTh1_fb+pTfh_fb+pTr1_fb+pPrec_base)
+    prob_Tfh := pTfh_fb / (pTfhc_fb+pTh1_fb+pTfh_fb+pTr1_fb+pPrec_base)
+    prob_Tr1 := pTr1_fb / (pTfhc_fb+pTh1_fb+pTfh_fb+pTr1_fb+pPrec_base)
+    prob_Prec := pPrec_base/(pTfhc_fb+pTh1_fb+pTfh_fb+pTr1_fb+pPrec_base)
+    prob_Tfhc := pTfhc_fb / (pTfhc_fb+pTh1_fb+pTfh_fb+pTr1_fb+pPrec_base)
+
+	########################## parameters proliferation #############################################
+	###################################################################################################
+	###################################################################################################
+    prolif_TCR_base = 12.5
+ 	prolif_Th1_base = 4.4
+ 	prolif_Tfh_base = 5.4
+ 	prolif_Prec_base = 4.4
+ 	prolif_Tr1_base = 4.0
+ 	prolif_Tfhc_base = 4.0
+
+	########################## parameters differentiation #############################################
+	###################################################################################################
+	###################################################################################################
+    r_Naive = 0.5 
+    r_Prec = 0.25
+    r_Mem = 0.004
+    n_div = 4
+	########################## parameters probabilities ###############################################
+	###################################################################################################
+	###################################################################################################
+    pTh1_base = 0.4
+    pTfh_base = 0.2
+    pTr1_base = 0.1
+    pTfhc_base = 0.1
+    pPrec_base = 1-pTh1_base-pTfh_base-pTr1_base-pTfhc_base
+
+    # calculate feedback on probability
+    fb_stren_pos = 2.0
+    fb_stren_neg = 1/fb_stren_pos
+
+	########################## parameters death #######################################################
+	###################################################################################################
+	###################################################################################################
+    death_Prec = 0.24
+    death_Th1 = 0.24
+    death_Tfh = 0.24
+    death_Tr1 = 0.07
+    death_Tfhc = 0.07
+
+	########################## parameters cytokines ###################################################
+	###################################################################################################
+	###################################################################################################
+    deg_Myc = 0.32
+    EC50_Myc = 0.1 
+    # TCR signaling
+    deg_TCR = 10.0
+    EC50_TCR = 0.5
+    
+	########################## initial conditions #####################################################
+	###################################################################################################
+	###################################################################################################
+    # initial conditions
+    Naive = 1200
+    Prec = 0
+    Prec1 = 0
+    Th1 = 0
+    Th1_2 = 0
+    Tfh = 0
+    Tfh_2 = 0
+    Tfhc = 0
+    Tfhc_2 = 0
+    Tr1 = 0
+    Tr1_2 = 0
+    Th1_mem = 0
+    Tfh_mem = 0
+
+    # initial conditions molecules
+    Myc = 1
+    TCR = 1
+
+end
