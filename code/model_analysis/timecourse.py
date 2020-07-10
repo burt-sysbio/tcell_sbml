@@ -22,15 +22,15 @@ def filter_cells(cells, names):
 
 def compute_cell_states(df):
     df["Precursors"] = df.Prec + df.Prec1
-    df["Th1_all"] = df.Th1 + df.Th1_2 + df.Th1_mem
-    df["Tfh_all"] = df.Tfh + df.Tfh_2 + df.Tfhc + df.Tfhc_2 + df.Tfh_mem
-    df["Tr1"] = df.Tr1 + df.Tr1+df.Tr1_2
-    df["Total_CD4"] = df.Precursors + df.Th1_all + df.Tfh_all + df.Tr1
-    df["Total_eff"] = df.Th1_all + df.Tfh_all + df.Tr1
-    df["nonTfh"] = df.Th1_all+df.Tr1
-    df["Tfh_chronic"] = df.Tfhc + df.Tfhc_2
-    df["Chronic CD4"] = df.Tfh_chronic + df.Tr1
+    df["Th1_eff"] = df.Th1 + df.Th1_2 + df.Th1_mem
+    df["Tfh_eff"] = df.Tfh + df.Tfh_2 + df.Tfh_mem
+    df["Tr1_all"] = df.Tr1+df.Tr1_2
 
+    df["nonTfh"] = df.Th1_eff+df.Tr1_all
+    df["Tfh_chronic"] = df.Tfhc + df.Tfhc_2
+    df["Tfh_all"] = df.Tfh_chronic + df.Tfh_eff
+    df["Th_chronic"] = df.Tfh_chronic + df.Tr1_all
+    df["Total_CD4"] = df.Precursors + df.Th1_eff + df.Tfh_all + df.Tr1_all
     return df
 
 def get_rel_cells(cells):
@@ -47,7 +47,7 @@ def tidy_sort(df):
     df = compute_cell_states(df)
     df_tidy = df.melt(id_vars = ["time", "Infection"], var_name = "celltype")
     
-    cells = filter_cells(df_tidy, ["Th1_all", "Tfh_all", "Tr1", "nonTfh",
+    cells = filter_cells(df_tidy, ["Th1_eff", "Tfh_all", "Tr1_all", "nonTfh",
                                    "Total_CD4"])    
     return df_tidy, cells
 
@@ -79,7 +79,6 @@ r.reset()
 # change TCR signal level so that it does not decrease
 # increase rate of IFN-I
 r.deg_TCR = 0.001
-r.r_IFNI = 1
 cl13_sim = r.simulate(0,70,200)
 
 r.resetToOrigin()
@@ -104,7 +103,21 @@ tidy_all = pd.concat([tidy_arm, tidy_cl13])
 xlabel = "time post infection (d)"
 ylabel = "cells"
 xticks = [0,10,20,30,40,50,60]
-g = sns.relplot(data = tidy_all, x = "time", y = "value", col = "celltype",
-                col_wrap = 8, hue = "Infection", kind = "line", facet_kws = {"sharey" : False})
+
+df_total = filter_cells(tidy_all, ["Total_CD4"])
+g = sns.relplot(data = df_total, x = "time", y = "value",  hue = "Infection", 
+                kind = "line")
+
 g.set(yscale = "log", ylim = (0.01, None), xlabel = xlabel, xticks = xticks)
-#g.savefig(path+today+"/all_species_timecourse.pdf")
+
+
+
+
+df_2 = filter_cells(tidy_all, ["Th1_eff", "Tfh_eff", "Tr1_all", "Tfh_chronic",
+                               "Precursors"])
+
+g = sns.relplot(data = df_2, x = "time", y = "value",  hue = "Infection", 
+                kind = "line", col = "celltype", facet_kws = {"sharey": True},
+                col_wrap = 3)
+
+g.set(yscale = "log", ylim = (0.01, None), xlabel = xlabel, xticks = xticks)

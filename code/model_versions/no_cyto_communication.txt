@@ -82,7 +82,7 @@ model test
 	########################## parameters proliferation #############################################
 	###################################################################################################
 	###################################################################################################
-    prolif_TCR_base = 12.5
+    prolif_TCR_base = 4.4
  	prolif_Th1_base = 4.4
  	prolif_Tfh_base = 4.4
  	prolif_Prec_base = 4.4
@@ -106,7 +106,7 @@ model test
     pPrec_base = 1-pTh1_base-pTfh_base-pTr1_base-pTfhc_base
 
     # calculate feedback on probability
-    fb_stren_pos = 100.0
+    fb_stren_pos = 2.0
     fb_stren_neg = 1/fb_stren_pos
 
 	########################## parameters death #######################################################
