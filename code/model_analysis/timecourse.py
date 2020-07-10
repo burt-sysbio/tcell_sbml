@@ -31,6 +31,8 @@ def compute_cell_states(df):
     df["Tfh_all"] = df.Tfh_chronic + df.Tfh_eff
     df["Th_chronic"] = df.Tfh_chronic + df.Tr1_all
     df["Total_CD4"] = df.Precursors + df.Th1_eff + df.Tfh_all + df.Tr1_all
+    df["Th_mem"] = df.Th1_mem + df.Tfh_mem
+    df["Th_eff"] = df.Th1_eff+ df.Tfh_eff
     return df
 
 def get_rel_cells(cells):
@@ -98,26 +100,82 @@ cl13_df["Infection"] = "Cl13"
 tidy_arm, cells_arm = tidy_sort(arm_df)
 tidy_cl13, cells_cl13 = tidy_sort(cl13_df)
 
-tidy_all = pd.concat([tidy_arm, tidy_cl13])
+cells_tfh = pd.concat([tidy_arm, tidy_cl13])
 
 xlabel = "time post infection (d)"
 ylabel = "cells"
 xticks = [0,10,20,30,40,50,60]
 
-df_total = filter_cells(tidy_all, ["Total_CD4"])
-g = sns.relplot(data = df_total, x = "time", y = "value",  hue = "Infection", 
-                kind = "line")
 
-g.set(yscale = "log", ylim = (0.01, None), xlabel = xlabel, xticks = xticks)
+# =============================================================================
+# convert data
+# =============================================================================
+arm_df = pd.DataFrame(arm_sim, columns = arm_sim.colnames)
+arm_df["Infection"] = "Arm"
+cl13_df = pd.DataFrame(cl13_sim, columns = cl13_sim.colnames)
+cl13_df["Infection"] = "Cl13"
 
+# tidy data frames sort cells and cytokines
+tidy_arm, cells_arm = tidy_sort(arm_df)
+tidy_cl13, cells_cl13 = tidy_sort(cl13_df)
 
+cells_tfh = pd.concat([tidy_arm, tidy_cl13])
+# =============================================================================
+# plot data
+# =============================================================================
+xlabel = "time post infection (d)"
+ylabel = "cells"
+xticks = [0,10,20,30,40,50,60]
 
+# =============================================================================
+# plot fahey data
+# =============================================================================
+path_data = "../../chronic_infection_model/data_literature/"
 
-df_2 = filter_cells(tidy_all, ["Th1_eff", "Tfh_eff", "Tr1_all", "Tfh_chronic",
-                               "Precursors"])
+fahey = "fahey_clean.csv"
+df_fahey = pd.read_csv(path_data+fahey)
+data_arm = df_fahey[df_fahey.name == "Arm"]
 
+data_cl13 = df_fahey[df_fahey.name == "Cl13"]
+data_fahey = [data_arm, data_cl13]
+
+df_1 = filter_cells(cells_tfh, ["Tfh_all", "nonTfh"])
+
+g = sns.relplot(data = df_1, x = "time", y = "value", hue = "celltype",
+                col = "Infection", kind = "line", palette = ["k", "0.5"])
+g.set(yscale = "log", ylabel = "cells", ylim = (1e2, 1e7), xlim = (0,70), 
+      xlabel = "time (days)")
+for ax, df in zip(g.axes.flat, data_fahey):
+    sns.scatterplot(data = df, x = "time", y = "value", hue = "celltype", 
+                    ax = ax, legend = False, palette = ["0.5", "k"])
+ 
+    ax.set_ylabel("cells")
+
+# =============================================================================
+# get other output
+# =============================================================================
+df_2 = filter_cells(cells_tfh, ["Th1_eff", "Tfh_eff", "Tr1_all", "Tfh_chronic",
+                               "Precursors", "Total_CD4"])
 g = sns.relplot(data = df_2, x = "time", y = "value",  hue = "Infection", 
                 kind = "line", col = "celltype", facet_kws = {"sharey": True},
                 col_wrap = 3)
-
 g.set(yscale = "log", ylim = (0.01, None), xlabel = xlabel, xticks = xticks)
+
+
+df_3 = filter_cells(cells_tfh, ["Tfh_all", "nonTfh"])
+g = sns.relplot(data = df_3, x = "time", y = "value", hue = "celltype",
+                col = "Infection", kind = "line")
+g.set(yscale = "log", ylim = (0.01, None), xlabel = xlabel, xticks = xticks)
+
+
+df_4 = filter_cells(cells_tfh, ["Th_chronic", "Th_eff"])
+g= sns.relplot(data = df_4, x = "time", y = "value", hue = "celltype",
+               col = "Infection", kind = "line")
+g.set(yscale = "log", ylim = (0.01, None), xlabel = xlabel, xticks = xticks)
+
+
+df_5 = filter_cells(cells_tfh, ["Th_mem"])
+g= sns.relplot(data = df_5, x = "time", y = "value", hue = "Infection",
+               kind = "line")
+g.set(yscale = "log", ylim = (0.01, None), xlabel = xlabel, xticks = xticks)
+
