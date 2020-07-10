@@ -9,11 +9,15 @@ Created on Wed Jul  1 15:26:09 2020
 import tellurium as te
 import pandas as pd
 import seaborn as sns
-from scipy import constants
+
 sns.set(context = "poster")
 from datetime import date
 import os
-import pickle
+
+today = str(date.today())
+path = "../../figures/"
+if not os.path.exists(path+today):
+    os.makedirs(path+today)
 
 
 def filter_cells(cells, names):
@@ -151,6 +155,7 @@ for ax, df in zip(g.axes.flat, data_fahey):
  
     ax.set_ylabel("cells")
 
+g.savefig(path+today+"/model_fit.pdf")
 # =============================================================================
 # get other output
 # =============================================================================

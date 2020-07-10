@@ -16,8 +16,15 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import pickle
 import seaborn as sns
+import os
+from datetime import date
 
-
+today = str(date.today())
+path = "../../figures/"
+if not os.path.exists(path+today):
+    os.makedirs(path+today)
+    
+    
 def filter_cells(cells, names):
     out = cells[cells.celltype.isin(names)]
     return out
@@ -147,15 +154,15 @@ r = te.loada(antimony_model)
 # =============================================================================
 params = Parameters()
 
-params.add('death_Th1', value=0.24, min = 0.1, max = 0.3)
-params.add('death_Tfh', value=0.24, min = 0.1, max = 0.3)
-params.add('death_Tr1', value=0.15, min = 0.05, max = 0.3)
-#params.add('death_Tfhc', value=0.001, min = 0, max = 0.1)
-params.add('prolif_Th1_base', value=4.4, min = 3.0, max = 6.0)
-params.add('prolif_Tfh_base', value=4.4, min = 2.0, max = 6.0)
-params.add('prolif_Tr1_base', value=3.0, min = 1.0, max = 4.0)
-#params.add('prolif_Tfhc_base', value=0, min = 0, max = 0.5)
-params.add('r_Mem_base', value=0.004, min = 0, max = 0.1)
+params.add('death_Th1', value=0.24, min = 0.21, max = 0.27)
+params.add('death_Tfh', value=0.24, min = 0.21, max = 0.27)
+params.add('death_Tr1', value=0.04, min = 0, max = 0.1)
+params.add('death_Tfhc', value=0, min = 0, max = 0.1)
+params.add('prolif_Th1_base', value=4.5, min = 4.2, max = 4.7)
+params.add('prolif_Tfh_base', value=4.5, min = 4.2, max = 4.7)
+params.add('prolif_Tr1_base', value=3.0, min = 2.8, max = 3.2)
+params.add('prolif_Tfhc_base', value=2.1, min = 1.9, max = 2.3)
+params.add('r_Mem_base', value=0.01, min = 0.005, max = 0.015)
 
 
 # =============================================================================
@@ -220,11 +227,11 @@ data_fahey = [data_arm, data_cl13]
 
 for ax, df in zip(g.axes.flat, data_fahey):
     sns.scatterplot(data = df, x = "time", y = "value", hue = "celltype", 
-                    ax = ax, legend = False, palette = ["k", "0.5"])
+                    ax = ax, legend = False, palette = ["0.5", "k"])
  
     ax.set_ylabel("cells")
     
-#g.savefig("../../figures/modelfit.pdf")
+g.savefig(path+today+"/modelfit_leastsquares.pdf")
 
 # =============================================================================
 # get other output
