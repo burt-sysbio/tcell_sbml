@@ -55,14 +55,14 @@ def tidy_sort(df):
 # make dir
 # =============================================================================
 today = str(date.today())
-path = "../figures/"
+path = "../../figures/"
 if not os.path.exists(path+today):
     os.makedirs(path+today)
     
 # =============================================================================
 #load model   
 # =============================================================================
-modelname = "no_cyto_communication.txt"
+modelname = "../model_versions/no_cyto_communication.txt"
 with open(modelname, 'r') as myfile:
     antimony_model = myfile.read()
 
@@ -107,4 +107,4 @@ xticks = [0,10,20,30,40,50,60]
 g = sns.relplot(data = tidy_all, x = "time", y = "value", col = "celltype",
                 col_wrap = 8, hue = "Infection", kind = "line", facet_kws = {"sharey" : False})
 g.set(yscale = "log", ylim = (0.01, None), xlabel = xlabel, xticks = xticks)
-g.savefig(path+today+"/all_species_timecourse.pdf")
+#g.savefig(path+today+"/all_species_timecourse.pdf")

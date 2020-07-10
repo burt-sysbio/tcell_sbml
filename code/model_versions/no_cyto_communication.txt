@@ -1,16 +1,16 @@
 function pos_feedback(cyto, EC50)
-	(cyto/(cyto+EC50))+0.0001
+	(cyto^3/(cyto^3+EC50^3))+0.0001
 end
 
+function neg_feedback(cyto, EC50)
+	(EC50^3/(cyto^3+EC50^3))+0.0001
+end
 
 function prob_feedback(conc, fbstren, EC50)
 	((fbstren*conc+EC50)/(conc+EC50))+0.0001
 end
 
 
-function neg_feedback(cyto, EC50)
-	(EC50/(cyto+EC50))+0.0001
-end
 
 model test
 	########################## ODE cells ##############################################################
@@ -67,15 +67,15 @@ model test
 	########################## algebraic relation probability #############################
 	###################################################################################################
 	###################################################################################################
-    pTh1_fb := pTh1_base*prob_feedback(TCR, fb_stren_neg, EC50_TCR)
-    pTfh_fb := pTfh_base*prob_feedback(TCR, fb_stren_neg, EC50_TCR)
-    pTr1_fb := pTr1_base*prob_feedback(TCR, fb_stren_pos, EC50_TCR)
-    pTfhc_fb := pTfhc_base*prob_feedback(TCR, fb_stren_pos, EC50_TCR)
+    pTh1_fb := pTh1_base*neg_feedback(TCR, EC50_TCR)
+    pTfh_fb := pTfh_base*neg_feedback(TCR, EC50_TCR)
+    pTr1_fb := pTr1_base*pos_feedback(TCR, EC50_TCR)
+    pTfhc_fb := pTfhc_base*pos_feedback(TCR, EC50_TCR)
 
     # normalize probabilities
-    prob_Th1 := pTh1_fb / (pTfhc_fb+pTh1_fb+pTfh_fb+pTr1_fb+pPrec_base)
-    prob_Tfh := pTfh_fb / (pTfhc_fb+pTh1_fb+pTfh_fb+pTr1_fb+pPrec_base)
-    prob_Tr1 := pTr1_fb / (pTfhc_fb+pTh1_fb+pTfh_fb+pTr1_fb+pPrec_base)
+    prob_Th1 := pTh1_fb /   (pTfhc_fb+pTh1_fb+pTfh_fb+pTr1_fb+pPrec_base)
+    prob_Tfh := pTfh_fb /   (pTfhc_fb+pTh1_fb+pTfh_fb+pTr1_fb+pPrec_base)
+    prob_Tr1 := pTr1_fb /   (pTfhc_fb+pTh1_fb+pTfh_fb+pTr1_fb+pPrec_base)
     prob_Prec := pPrec_base/(pTfhc_fb+pTh1_fb+pTfh_fb+pTr1_fb+pPrec_base)
     prob_Tfhc := pTfhc_fb / (pTfhc_fb+pTh1_fb+pTfh_fb+pTr1_fb+pPrec_base)
 
@@ -84,10 +84,10 @@ model test
 	###################################################################################################
     prolif_TCR_base = 12.5
  	prolif_Th1_base = 4.4
- 	prolif_Tfh_base = 5.4
+ 	prolif_Tfh_base = 4.4
  	prolif_Prec_base = 4.4
- 	prolif_Tr1_base = 4.0
- 	prolif_Tfhc_base = 4.0
+ 	prolif_Tr1_base = 4.4
+ 	prolif_Tfhc_base = 4.4
 
 	########################## parameters differentiation #############################################
 	###################################################################################################
@@ -99,14 +99,14 @@ model test
 	########################## parameters probabilities ###############################################
 	###################################################################################################
 	###################################################################################################
-    pTh1_base = 0.4
+    pTh1_base = 0.2
     pTfh_base = 0.2
-    pTr1_base = 0.1
-    pTfhc_base = 0.1
+    pTr1_base = 0.2
+    pTfhc_base = 0.2
     pPrec_base = 1-pTh1_base-pTfh_base-pTr1_base-pTfhc_base
 
     # calculate feedback on probability
-    fb_stren_pos = 2.0
+    fb_stren_pos = 100.0
     fb_stren_neg = 1/fb_stren_pos
 
 	########################## parameters death #######################################################
@@ -115,8 +115,8 @@ model test
     death_Prec = 0.24
     death_Th1 = 0.24
     death_Tfh = 0.24
-    death_Tr1 = 0.07
-    death_Tfhc = 0.07
+    death_Tr1 = 0.24
+    death_Tfhc = 0.24
 
 	########################## parameters cytokines ###################################################
 	###################################################################################################
