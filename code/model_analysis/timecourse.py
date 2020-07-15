@@ -14,6 +14,7 @@ sns.set(context = "poster")
 from datetime import date
 import os
 
+
 today = str(date.today())
 path = "../../figures/"
 if not os.path.exists(path+today):
@@ -38,6 +39,7 @@ def compute_cell_states(df):
     df["Th_mem"] = df.Th1_mem + df.Tfh_mem
     df["Th_eff"] = df.Th1_eff+ df.Tfh_eff
     return df
+
 
 def get_rel_cells(cells):
     #add total cells and compute relative cell fractions
@@ -155,7 +157,7 @@ for ax, df in zip(g.axes.flat, data_fahey):
  
     ax.set_ylabel("cells")
 
-g.savefig(path+today+"/model_fit.pdf")
+#g.savefig(path+today+"/model_fit.pdf")
 # =============================================================================
 # get other output
 # =============================================================================
