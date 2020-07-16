@@ -148,8 +148,8 @@ model test
 	###################################################################################################
     r_IL2 = 10.0*3600*24 # taken from literature
     r_IL10 = 10.0*3600*24 # taken from literature
-    deg_IL2 = 2000 # arbitrary value assuming global consumer pool of il2
-    deg_IL10 = 2000 # arbitrary value assuming global consumer pool of il10
+    deg_IL2 = 50000 # arbitrary value assuming global consumer pool of il2
+    deg_IL10 = 3000 # arbitrary value assuming global consumer pool of il10
 
     # feedback effects
     EC50_IL2 = mol_to_molecules(6.5)
@@ -157,7 +157,7 @@ model test
 
     fb_IL10 = 1
     fb_IL2 = 1
-    
+
 	########################## initial conditions #####################################################
 	###################################################################################################
 	###################################################################################################
