@@ -9,9 +9,13 @@ import numpy as np
 import pandas as pd
 from scipy import constants
 import seaborn as sns
-
+import matplotlib.pyplot as plt
 
 def get_rel_cells(cells):
+    """
+    cells needs to be tidy data frame
+    add new column to cells df which gives percentage of total cells
+    """
     #add total cells and compute relative cell fractions
     tot_cells = cells[cells["celltype"] == "Total_CD4"].rename(columns = {"value" : "total"})
     tot_cells = tot_cells[["time", "total", "Infection"]]
@@ -26,44 +30,69 @@ def filter_cells(cells, names):
     return out
 
 
-def plot_param_uncertainty(r, startVal, name, ax, num_sims = 20):
-    stdDev = 0.5
+def run_param_uncertainty(r, startVal, name, num_sims = 50):
+    stdDev = 0.1
 
     # assumes initial parameter estimate as mean and iterates 60% above and below.
     vals = np.linspace((1-stdDev)*startVal, (1+stdDev)*startVal, num_sims)
-    df_arm = []
-    df_cl13 = []
+    df = []
     
+    # for every value in vals arr, change model value and simulate, store result in df_arm and df_cl13
     for val in vals:
         r.resetToOrigin()
+        # set model parameter to value
         exec("r.%s = %f" % (name, val))
-        cells = run_pipeline(r)
+        
+        # simultate model for arm and cl13
+        cells, cytos = run_pipeline(r)
+        
         cells_rel = get_rel_cells(cells)
         cells_rel = filter_cells(cells_rel, ["Tfh_all"])
+        # add current value as val column
         cells_rel["val"] = val
-        
-        
-        df_arm.append(cells_rel[cells_rel.Infection == "Arm"])
-        df_cl13.append(cells_rel[cells_rel.Infection == "Cl13"])
-        
-    df_arm = pd.concat(df_arm)
-    df_cl13 = pd.concat(df_cl13)
-    
-    sns.lineplot(data = df_arm, x = "time", y = "total", hue = "val",
-                 palette = "Blues", ax = ax, legend = False)
+               
+        df.append(cells_rel)
 
-    
-    sns.lineplot(data = df_cl13, x = "time", y = "total", hue = "val",
-                 palette = "Reds", ax = ax, legend = False)
-    
-    ax.set_xlabel(name)
-    ax.set_ylabel("Tfh (% of total)")
+    # combine dataframes        
+    df= pd.concat(df)
 
-    # set to origin at the end of experiment
     r.resetToOrigin()
+
+    return df
+
+
+def plot_param_uncertainty(df, pname): 
+    """
+    provide data frames generated with run_param_uncertainty and axes object
+    plots two lineplots on top of each other for armstrong and cl13 
+    parameter variation
+    """
     
+    
+    arm = df[df.Infection == "Arm"]
+    cl13 = df[df.Infection == "Cl13"]
+    
+    # create colorbar
+    norm = plt.Normalize(arm.val.min(), arm.val.max())
+    sm = plt.cm.ScalarMappable(cmap="Greys", norm=norm)
+    sm.set_array([])
+    
+    fig, (ax1, ax2) = plt.subplots(1,2, figsize = (12,4))
+    
+    sns.lineplot(data = arm, x = "time", y = "total", hue = "val",
+                 palette = "Greys", ax = ax1)
 
+    
+    sns.lineplot(data = cl13, x = "time", y = "total", hue = "val",
+                 palette = "Greys", ax = ax2)
 
+    ax1.get_legend().remove()
+    ax2.get_legend().remove()
+    
+    plt.colorbar(sm, ax = [ax1, ax2], label = pname)
+    # set to origin at the end of experiment
+    
+    
 def compute_cell_states(df, model_name = "no_cyto_comm_model"):
     """
     # takes data frame and computes cell states
@@ -173,4 +202,33 @@ def run_pipeline(r, start = 0, stop = 70, res = 200):
     
     cells = pd.concat([tidy_arm, tidy_cl13])
     cytos = get_cytos(cells)
+    
+    r.resetToOrigin()
+    
     return cells, cytos
+
+
+def sensitivity_analysis(r, pnames):
+    """
+    run and plot sensitivity analysis for multiple parameters
+
+    Parameters
+    ----------
+    r : roadrunner instance
+        DESCRIPTION.
+    pnames : list of parameter names
+        DESCRIPTION.
+
+    Returns
+    -------
+    None
+
+    """
+    startVals = r.getGlobalParameterValues()
+    ids = r.getGlobalParameterIds()
+
+    # run sensitivity for each parameter name provided
+    for val, pname in zip(startVals, ids): 
+        if pname in pnames:
+            df = run_param_uncertainty(r, val, pname)
+            plot_param_uncertainty(df, pname)
