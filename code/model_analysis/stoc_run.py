@@ -71,34 +71,47 @@ if not os.path.exists(path+today):
 # =============================================================================
 #load model   
 # =============================================================================
-modelname = "../model_versions/no_cyto_communication.txt"
-with open(modelname, 'r') as myfile:
-    antimony_model = myfile.read()
+#modelname = "../model_versions/no_cyto_communication.txt"
+#with open(modelname, 'r') as myfile:
+#    antimony_model = myfile.read()
 
 # =============================================================================
 # run simulations
 # =============================================================================
-r = te.loada(antimony_model)
+#r = te.loada(antimony_model)
 #r.integrator = 'gillespie'
 #r.integrator.seed = 1234
 
-arm_sim = r.simulate(0, 70, 200)
+#arm_sim = r.simulate(0, 70, 200)
 
 # reset variables, keep parameters
-r.reset()
+#r.reset()
 #r.r_IL10_ex = 100
 # change TCR signal level so that it does not decrease
 # increase rate of IFN-I
-r.deg_TCR = 0.001
-cl13_sim = r.simulate(0,70, 200)
+#r.deg_TCR = 0.001
+#cl13_sim = r.simulate(0,70, 200)
 
-r.resetToOrigin()
+#r.resetToOrigin()
 
 
-results = []
-for k in range(1, 50):
-    r.reset()
-    s = r.gillespie(0, 50, 100, ["time", "Naive"])
-    results.append(s)
-    r.plot(s, show=False, alpha=0.7)
-te.show()
+
+
+start = 0
+stop = 3
+res = 30
+
+r = te.loada(
+    """
+    x' = -k1*x
+    x = 1
+    k1 = 1
+    """)
+
+
+r.simulate(start, stop, res)
+r.plot()
+r.reset()
+
+r.gillespie(start, stop, res)
+r.plot()

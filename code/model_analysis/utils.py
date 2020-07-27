@@ -8,6 +8,7 @@ Created on Thu Jul 16 17:13:15 2020
 import numpy as np
 import pandas as pd
 from scipy import constants
+import seaborn as sns
 
 
 def get_rel_cells(cells):
@@ -25,7 +26,7 @@ def filter_cells(cells, names):
     return out
 
 
-def plot_param_uncertainty(model, startVal, name, ax, num_sims = 20):
+def plot_param_uncertainty(r, startVal, name, ax, num_sims = 20):
     stdDev = 0.5
 
     # assumes initial parameter estimate as mean and iterates 60% above and below.
@@ -63,7 +64,7 @@ def plot_param_uncertainty(model, startVal, name, ax, num_sims = 20):
     
 
 
-def compute_cell_states(df):
+def compute_cell_states(df, model_name = "no_cyto_comm_model"):
     """
     # takes data frame and computes cell states
     !!!! This might need adjustment depending on the antimony model
@@ -72,6 +73,9 @@ def compute_cell_states(df):
     ----------
     df : TYPE
         DESCRIPTION.
+        
+    model_name : TYPE = String
+    provide antimony file name as string because each model has different
 
     Returns
     -------
@@ -79,18 +83,24 @@ def compute_cell_states(df):
         DESCRIPTION.
 
     """
-    df["Precursors"] = df.Prec + df.Prec1
-    df["Th1_eff"] = df.Th1 + df.Th1_2 + df.Th1_mem
-    df["Tfh_eff"] = df.Tfh + df.Tfh_2 + df.Tfh_mem
-    df["Tr1_all"] = df.Tr1+df.Tr1_2
-
-    df["nonTfh"] = df.Th1_eff+df.Tr1_all
-    df["Tfh_chronic"] = df.Tfhc + df.Tfhc_2
-    df["Tfh_all"] = df.Tfh_chronic + df.Tfh_eff
-    df["Th_chronic"] = df.Tfh_chronic + df.Tr1_all
-    df["Total_CD4"] = df.Precursors + df.Th1_eff + df.Tfh_all + df.Tr1_all
-    df["Th_mem"] = df.Th1_mem + df.Tfh_mem
-    df["Th_eff"] = df.Th1_eff+ df.Tfh_eff
+    
+    if model_name == "no_cyto_comm_model":
+        df["Precursors"] = df.Prec + df.Prec1
+        df["Th1_eff"] = df.Th1 + df.Th1_2 + df.Th1_mem
+        df["Tfh_eff"] = df.Tfh + df.Tfh_2 + df.Tfh_mem
+        df["Tr1_all"] = df.Tr1+df.Tr1_2
+    
+        df["nonTfh"] = df.Th1_eff+df.Tr1_all
+        df["Tfh_chronic"] = df.Tfhc + df.Tfhc_2
+        df["Tfh_all"] = df.Tfh_chronic + df.Tfh_eff
+        df["Th_chronic"] = df.Tfh_chronic + df.Tr1_all
+        df["Total_CD4"] = df.Precursors + df.Th1_eff + df.Tfh_all + df.Tr1_all
+        df["Th_mem"] = df.Th1_mem + df.Tfh_mem
+        df["Th_eff"] = df.Th1_eff+ df.Tfh_eff
+    
+    else:
+        print("no appropriate model name provided")
+        
     return df
 
 
