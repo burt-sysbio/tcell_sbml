@@ -46,5 +46,5 @@ pnames = ["prolif_Th1_base",
 
 
 
-pnames = ["prolif_Th1_base"]
-sensitivity_analysis(r, pnames, param_fc = 10.0, sym = "neg", log_p = True, save = True)
+pnames = ["fb_IL10_Th1", "fb_IL2_Tfh"]
+sensitivity_analysis(r, pnames, param_fc = 100, sym = "neg", log_p = True, save = True)
