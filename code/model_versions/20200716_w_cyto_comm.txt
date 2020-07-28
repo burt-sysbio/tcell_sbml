@@ -54,7 +54,7 @@ model test
 	###################################################################################################
 	###################################################################################################
     IL2' = r_IL2*IL2_producers - deg_IL2*IL2
-    IL10' = r_IL10*Tr1 - deg_IL10*IL10    
+    IL10' = r_IL10*IL10_producers - deg_IL10*IL10    
 
     # molecules
     Myc' = -deg_Myc*Myc
@@ -66,7 +66,7 @@ model test
 	###################################################################################################
 	###################################################################################################
  	IL2_producers := Prec+Prec1+Th1+Th1_2
-
+ 	IL10_producers := Tr1+Tr1_2
 
     ########################## algebraic relation Memory ##############################################
 	###################################################################################################
@@ -79,7 +79,7 @@ model test
 	###################################################################################################
     prolif_TCR := prolif_TCR_base*pos_feedback(TCR, EC50_TCR)  
     prolif_Prec := prolif_Prec_base*pos_feedback(Myc, EC50_Myc) + prolif_TCR
-    prolif_Th1 := prolif_Th1_base*pos_feedback(Myc, EC50_Myc) * prob_feedback(IL10, fb_IL10, EC50_IL10)
+    prolif_Th1 := prolif_Th1_base*pos_feedback(Myc, EC50_Myc)
     prolif_Tfh := prolif_Tfh_base*pos_feedback(Myc, EC50_Myc)
     prolif_Tr1 := prolif_Tr1_base*pos_feedback(Myc, EC50_Myc)
     prolif_Tfhc := prolif_Tfhc_base*pos_feedback(Myc, EC50_Myc)
@@ -87,7 +87,7 @@ model test
 	########################## algebraic relation probability #########################################
 	###################################################################################################
 	###################################################################################################
-    pTh1_fb := pTh1_base*neg_feedback(TCR, EC50_TCR) * prob_feedback(IL10, fb_IL10, EC50_IL10)
+    pTh1_fb := pTh1_base*neg_feedback(TCR, EC50_TCR)
     pTfh_fb := pTfh_base*neg_feedback(TCR, EC50_TCR)
     pTr1_fb := pTr1_base*pos_feedback(TCR, EC50_TCR)
     pTfhc_fb := pTfhc_base*pos_feedback(TCR, EC50_TCR)
@@ -146,14 +146,14 @@ model test
  	########################## parameters cytokines ###################################################
 	###################################################################################################
 	###################################################################################################
-    r_IL2 = 10.0*3600*24 # taken from literature
-    r_IL10 = 10.0*3600*24 # taken from literature
+    r_IL2 = 10.0*3600*24 # molecules/s * 60s*60s*24h to get molecules/day taken from literature
+    r_IL10 = 10.0*3600*24 # # molecules/s * 60s*60s*24h to get molecules/day taken from literature
     deg_IL2 = 50000 # arbitrary value assuming global consumer pool of il2
     deg_IL10 = 3000 # arbitrary value assuming global consumer pool of il10
 
-    # feedback effects
-    EC50_IL2 = mol_to_molecules(6.5)
-    EC50_IL10 = mol_to_molecules(50.0)
+    # feedback effects (converted to molecules, assuming given lymph node volumne 1microlitre)
+    EC50_IL2 = mol_to_molecules(6.5) # 6.5 estimated EC50 value in picomolar measured through stat phosphorylation
+    EC50_IL10 = mol_to_molecules(50.0) # 50 estimated EC50 value in picomolar measured through stat phosphorylation
 
     fb_IL10 = 1
     fb_IL2 = 1
