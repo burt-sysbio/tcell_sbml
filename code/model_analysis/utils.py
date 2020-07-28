@@ -8,8 +8,7 @@ Created on Thu Jul 16 17:13:15 2020
 import numpy as np
 import pandas as pd
 from scipy import constants
-import seaborn as sns
-import matplotlib.pyplot as plt
+from plotting_module import plot_param_uncertainty
 
 def get_rel_cells(cells):
     """
@@ -60,72 +59,8 @@ def run_param_uncertainty(r, startVal, name, num_sims = 50):
     return df
 
 
-def plot_param_uncertainty(df, pname): 
-    """
-    provide data frames generated with run_param_uncertainty and axes object
-    plots two lineplots on top of each other for armstrong and cl13 
-    parameter variation
-    """
-    
-    arm = df[df.Infection == "Arm"]
-    cl13 = df[df.Infection == "Cl13"]
-    
-    arm_tfh = filter_cells(arm, ["Tfh_all"])
-    cl13_tfh = filter_cells(cl13, ["Tfh_all"])
-    arm_notfh = filter_cells(arm, ["nonTfh"])
-    cl13_notfh = filter_cells(cl13, ["nonTfh"])
-    
-    # create colorbar
-    cmap = "Blues"
-    norm = plt.Normalize(arm.val.min(), arm.val.max())
-    sm = plt.cm.ScalarMappable(cmap=cmap, norm=norm)
-    sm.set_array([])
-    
-    # create figure and axes
-    fig, axes = plt.subplots(3,2, figsize = (10,9))
-    
-    ax = axes.flatten()
-    
-    # tfh relative cell numbers
-    sns.lineplot(data = arm_tfh, x = "time", y = "total", hue = "val",
-                 palette = cmap, ax = ax[0])
-    
-    sns.lineplot(data = cl13_tfh, x = "time", y = "total", hue = "val",
-                 palette = cmap, ax = ax[1])
 
-    # tfh total cell numbers
-    sns.lineplot(data = arm_tfh, x = "time", y = "value", hue = "val",
-                 palette = cmap, ax = ax[2])
-    
-    
-    sns.lineplot(data = cl13_tfh, x = "time", y = "value", hue = "val",
-                 palette = cmap, ax = ax[3])
-    
-    # non tfh total cell numbers
-    sns.lineplot(data = arm_notfh, x = "time", y = "value", hue = "val",
-                 palette = cmap, ax = ax[4])
-    
-    sns.lineplot(data = cl13_notfh, x = "time", y = "value", hue = "val",
-                 palette = cmap, ax = ax[5])
-    
-   
-    reg_scale = [ax[0], ax[1]]
-    log_scale = [ax[2], ax[3], ax[4], ax[5]]
-    
-    for a in reg_scale:
-        a.set_ylim(0,100)
-    
-    for a in log_scale:
-        a.set_yscale("log")
-        
-    for a in ax:
-        a.get_legend().remove()
-    
-    plt.colorbar(sm, ax = [ax[0], ax[1]], label = pname)
-    plt.colorbar(sm, ax = [ax[2], ax[3]], label = pname)
-    plt.colorbar(sm, ax = [ax[4], ax[5]], label = pname)
-    
-    # set to origin at the end of experiment
+
     
     
 def compute_cell_states(df, model_name = "no_cyto_comm_model"):
@@ -243,7 +178,7 @@ def run_pipeline(r, start = 0, stop = 70, res = 200):
     return cells, cytos
 
 
-def sensitivity_analysis(r, pnames):
+def sensitivity_analysis(r, pnames, save = False):
     """
     run and plot sensitivity analysis for multiple parameters
 
@@ -266,4 +201,4 @@ def sensitivity_analysis(r, pnames):
     for val, pname in zip(startVals, ids): 
         if pname in pnames:
             df = run_param_uncertainty(r, val, pname)
-            plot_param_uncertainty(df, pname)
+            plot_param_uncertainty(df, pname, save)
