@@ -47,7 +47,6 @@ def run_param_uncertainty(r, startVal, name, num_sims = 50):
         cells, cytos = run_pipeline(r)
         
         cells_rel = get_rel_cells(cells)
-        cells_rel = filter_cells(cells_rel, ["Tfh_all"])
         # add current value as val column
         cells_rel["val"] = val
                
@@ -68,28 +67,64 @@ def plot_param_uncertainty(df, pname):
     parameter variation
     """
     
-    
     arm = df[df.Infection == "Arm"]
     cl13 = df[df.Infection == "Cl13"]
     
+    arm_tfh = filter_cells(arm, ["Tfh_all"])
+    cl13_tfh = filter_cells(cl13, ["Tfh_all"])
+    arm_notfh = filter_cells(arm, ["nonTfh"])
+    cl13_notfh = filter_cells(cl13, ["nonTfh"])
+    
     # create colorbar
+    cmap = "Blues"
     norm = plt.Normalize(arm.val.min(), arm.val.max())
-    sm = plt.cm.ScalarMappable(cmap="Greys", norm=norm)
+    sm = plt.cm.ScalarMappable(cmap=cmap, norm=norm)
     sm.set_array([])
     
-    fig, (ax1, ax2) = plt.subplots(1,2, figsize = (12,4))
+    # create figure and axes
+    fig, axes = plt.subplots(3,2, figsize = (10,9))
     
-    sns.lineplot(data = arm, x = "time", y = "total", hue = "val",
-                 palette = "Greys", ax = ax1)
+    ax = axes.flatten()
+    
+    # tfh relative cell numbers
+    sns.lineplot(data = arm_tfh, x = "time", y = "total", hue = "val",
+                 palette = cmap, ax = ax[0])
+    
+    sns.lineplot(data = cl13_tfh, x = "time", y = "total", hue = "val",
+                 palette = cmap, ax = ax[1])
 
+    # tfh total cell numbers
+    sns.lineplot(data = arm_tfh, x = "time", y = "value", hue = "val",
+                 palette = cmap, ax = ax[2])
     
-    sns.lineplot(data = cl13, x = "time", y = "total", hue = "val",
-                 palette = "Greys", ax = ax2)
-
-    ax1.get_legend().remove()
-    ax2.get_legend().remove()
     
-    plt.colorbar(sm, ax = [ax1, ax2], label = pname)
+    sns.lineplot(data = cl13_tfh, x = "time", y = "value", hue = "val",
+                 palette = cmap, ax = ax[3])
+    
+    # non tfh total cell numbers
+    sns.lineplot(data = arm_notfh, x = "time", y = "value", hue = "val",
+                 palette = cmap, ax = ax[4])
+    
+    sns.lineplot(data = cl13_notfh, x = "time", y = "value", hue = "val",
+                 palette = cmap, ax = ax[5])
+    
+   
+    reg_scale = [ax[0], ax[1]]
+    log_scale = [ax[2], ax[3], ax[4], ax[5]]
+    
+    for a in reg_scale:
+        a.set_ylim(0,100)
+    
+    for a in log_scale:
+        a.set_yscale("log")
+        
+    for a in ax:
+        a.get_legend().remove()
+    
+    plt.colorbar(sm, ax = [ax[0], ax[1]], label = pname)
+    plt.colorbar(sm, ax = [ax[2], ax[3]], label = pname)
+    plt.colorbar(sm, ax = [ax[4], ax[5]], label = pname)
+    
     # set to origin at the end of experiment
     
     

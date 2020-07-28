@@ -103,9 +103,9 @@ model test
 	###################################################################################################
 	###################################################################################################
     prolif_TCR_base = 11.4
- 	prolif_Th1_base = 4.5
- 	prolif_Tfh_base = 4.5
- 	prolif_Prec_base = 4.4
+ 	prolif_Th1_base = 4.5 # 4.5/alpha=2 = 2.25 division per day, 10.5 hours per division
+ 	prolif_Tfh_base = 4.5  # 4.5/alpha=2 = 2.25 division per day, 10.5 hours per division
+ 	prolif_Prec_base = 4.4  # 4.5/alpha=2 = 2.25 division per day, 10.5 hours per division
  	prolif_Tr1_base = 3.0
  	prolif_Tfhc_base = 2.1
 
@@ -132,7 +132,7 @@ model test
     death_Th1 = 0.24
     death_Tfh = 0.24
     death_Tr1 = 0.04
-    death_Tfhc = 0
+    death_Tfhc = 0.0001
 
 	########################## parameters molecules ###################################################
 	###################################################################################################

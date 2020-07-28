@@ -33,5 +33,25 @@ r = te.loada(antimony_model)
 
 
 # add names for parameter scan
-pnames = ["prolif_Th1_base", "prolif_Tfh_base"]
+pnames = ["prolif_Th1_base", 
+          "prolif_Tfh_base",
+          "prolif_TCR_base",
+          "prolif_Prec_base",
+          "prolif_Tr1_base",
+          "prolif_Tfhc_base",
+          "deg_Myc",
+          "EC50_TCR",
+          "death_Prec",
+          "death_Th1",
+          "death_Tfh",
+          "death_Tr1",
+          "death_Tfhc",
+          "pTh1_base",
+          "pTfh_base",
+          "pTr1_base",
+          "pTfhc_base"
+          ]
+
+pnames = ["prolif_Th1_base"]
+plt.close("all")
 sensitivity_analysis(r, pnames)

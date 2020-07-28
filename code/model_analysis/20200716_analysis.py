@@ -13,6 +13,7 @@ import seaborn as sns
 sns.set(context = "poster")
 from datetime import date
 import os
+import matplotlib.pyplot as plt
 from utils import run_pipeline, filter_cells
 
 # =============================================================================
@@ -44,6 +45,8 @@ xticks = [0,10,20,30,40,50,60]
 # =============================================================================
 # plot fahey data
 # =============================================================================
+plt.close("all")
+
 path_data = "../../chronic_infection_model/data_literature/"
 
 fahey = "fahey_clean.csv"
