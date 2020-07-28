@@ -65,7 +65,7 @@ model test
     ########################## algebraic relation cytokines ###########################################
 	###################################################################################################
 	###################################################################################################
- 	IL2_producers := Prec+Prec1+Th1+Th1_2
+ 	IL2_producers := Th1+Th1_2
  	IL10_producers := Tr1+Tr1_2
 
     ########################## algebraic relation Memory ##############################################
@@ -87,10 +87,10 @@ model test
 	########################## algebraic relation probability #########################################
 	###################################################################################################
 	###################################################################################################
-    pTh1_fb := pTh1_base*neg_feedback(TCR, EC50_TCR)
-    pTfh_fb := pTfh_base*neg_feedback(TCR, EC50_TCR)
-    pTr1_fb := pTr1_base*pos_feedback(TCR, EC50_TCR)
-    pTfhc_fb := pTfhc_base*pos_feedback(TCR, EC50_TCR)
+    pTh1_fb := pTh1_base*neg_feedback(TCR, EC50_TCR)*prob_feedback(IL10, fb_IL10_Th1, EC50_IL10)
+    pTfh_fb := pTfh_base*neg_feedback(TCR, EC50_TCR)*prob_feedback(IL2, fb_IL2_Tfh, EC50_IL2)
+    pTr1_fb := pTr1_base*pos_feedback(TCR, EC50_TCR)*prob_feedback(IL10, fb_IL10_Tr1, EC50_IL10)
+    pTfhc_fb := pTfhc_base*pos_feedback(TCR, EC50_TCR)*prob_feedback(IL2, fb_IL2_Tfh, EC50_IL2)
 
     # normalize probabilities
     prob_Th1 := pTh1_fb /   (pTfhc_fb+pTh1_fb+pTfh_fb+pTr1_fb+pPrec_base)
@@ -148,15 +148,16 @@ model test
 	###################################################################################################
     r_IL2 = 10.0*3600*24 # molecules/s * 60s*60s*24h to get molecules/day taken from literature
     r_IL10 = 10.0*3600*24 # # molecules/s * 60s*60s*24h to get molecules/day taken from literature
-    deg_IL2 = 50000 # arbitrary value assuming global consumer pool of il2
-    deg_IL10 = 3000 # arbitrary value assuming global consumer pool of il10
+    deg_IL2 = 10000 # arbitrary value assuming global consumer pool of il2
+    deg_IL10 = 10000 # arbitrary value assuming global consumer pool of il10
 
     # feedback effects (converted to molecules, assuming given lymph node volumne 1microlitre)
     EC50_IL2 = mol_to_molecules(6.5) # 6.5 estimated EC50 value in picomolar measured through stat phosphorylation
     EC50_IL10 = mol_to_molecules(50.0) # 50 estimated EC50 value in picomolar measured through stat phosphorylation
 
-    fb_IL10 = 1
-    fb_IL2 = 1
+    fb_IL10_Th1 = 1
+    fb_IL10_Tr1 = 1
+    fb_IL2_Tfh = 1
 
 	########################## initial conditions #####################################################
 	###################################################################################################

@@ -29,11 +29,49 @@ def filter_cells(cells, names):
     return out
 
 
-def run_param_uncertainty(r, startVal, name, num_sims = 50):
-    stdDev = 0.1
+def run_param_uncertainty(r, startVal, name, param_fc, sym, log_p, num_sims = 50):
+    """
+    
 
+    Parameters
+    ----------
+    r : roadrunner instance
+        antimony T cell model
+    startVal : TYPE
+        DESCRIPTION.
+    name : TYPE
+        DESCRIPTION.
+    param_fc : float
+        should be greater 1, specifies range of param to be varied as fold-change
+    sym : True or "pos" or "neg"
+        specify if param should be varied symmetrically with foldchange or only higher or lower than def value 
+    log_p : boolean
+        set to True if colorbar and sampling should come from log space
+    num_sims : TYPE, optional
+        DESCRIPTION. The default is 50.
+
+    Returns
+    -------
+    df : TYPE
+        DESCRIPTION.
+
+    """
     # assumes initial parameter estimate as mean and iterates 60% above and below.
-    vals = np.linspace((1-stdDev)*startVal, (1+stdDev)*startVal, num_sims)
+    if sym == True:
+        minval = (1/param_fc)*startVal
+        maxval = param_fc*startVal
+    elif sym == "pos":
+        minval = startVal
+        maxval = param_fc*startVal
+    else:
+        minval = (1/param_fc)*startVal
+        maxval = startVal
+    
+    if log_p == False:
+        vals = np.linspace(minval, maxval, num_sims)
+    else:
+        vals = np.geomspace(minval, maxval, num_sims)
+        
     df = []
     
     # for every value in vals arr, change model value and simulate, store result in df_arm and df_cl13
@@ -178,7 +216,7 @@ def run_pipeline(r, start = 0, stop = 70, res = 200):
     return cells, cytos
 
 
-def sensitivity_analysis(r, pnames, save = False):
+def sensitivity_analysis(r, pnames, param_fc, sym, log_p, save = False):
     """
     run and plot sensitivity analysis for multiple parameters
 
@@ -200,5 +238,5 @@ def sensitivity_analysis(r, pnames, save = False):
     # run sensitivity for each parameter name provided
     for val, pname in zip(startVals, ids): 
         if pname in pnames:
-            df = run_param_uncertainty(r, val, pname)
-            plot_param_uncertainty(df, pname, save)
+            df = run_param_uncertainty(r, val, pname, param_fc, sym, log_p)
+            plot_param_uncertainty(df, pname, log_p, save)

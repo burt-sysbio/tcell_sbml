@@ -12,10 +12,11 @@ from datetime import date
 import seaborn as sns
 import matplotlib.pyplot as plt
 import utils
+from matplotlib.colors import LogNorm, Normalize
 sns.set(context = "paper", style = "ticks")
 
 
-def plot_param_uncertainty(df, pname, save = False): 
+def plot_param_uncertainty(df, pname, log_p = False, save = False): 
     """
     provide data frames generated with run_param_uncertainty from utils
     plots two lineplots on top of each other for armstrong and cl13 
@@ -35,9 +36,14 @@ def plot_param_uncertainty(df, pname, save = False):
     df_list = [utils.filter_cells(df, [cell]) for cell in cells]
     df_list = [split_df(df) for df in df_list]
     
-    # create colorbar mappable
+    # create colorbar mappable either lienar or log scale depending on pparam array
     cmap = "Blues"
-    norm = plt.Normalize(df.val.min(), df.val.max())
+    
+    if log_p == False:
+        norm = Normalize(df.val.min(), df.val.max())
+    else:
+        norm = LogNorm(df.val.min(), df.val.max())
+        
     sm = plt.cm.ScalarMappable(cmap=cmap, norm=norm)
     sm.set_array([])
     
@@ -55,10 +61,10 @@ def plot_param_uncertainty(df, pname, save = False):
             yvar = "value"
 
         sns.lineplot(data = df[0], x = "time", y = yvar, hue = "val",
-                     palette = cmap, ax = ax[0])
+                     palette = cmap, ax = ax[0], hue_norm = norm)
     
         sns.lineplot(data = df[1], x = "time", y = yvar, hue = "val",
-                     palette = cmap, ax = ax[1])
+                     palette = cmap, ax = ax[1], hue_norm = norm)
 
         # axes specific changes
         for a in ax:

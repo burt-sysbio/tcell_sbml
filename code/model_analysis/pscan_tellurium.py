@@ -38,8 +38,13 @@ pnames = ["prolif_Th1_base",
           "pTh1_base",
           "pTfh_base",
           "pTr1_base",
-          "pTfhc_base"
+          "pTfhc_base",
+          "n_div",
+          "r_Prec",
+          "r_Naive"
           ]
 
-#pnames = ["prolif_Th1_base"]
-sensitivity_analysis(r, pnames, save = True)
+
+
+pnames = ["prolif_Th1_base"]
+sensitivity_analysis(r, pnames, param_fc = 10.0, sym = "neg", log_p = True, save = True)
