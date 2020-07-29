@@ -12,7 +12,7 @@ from utils import sensitivity_analysis
 # =============================================================================
 # run model    
 # =============================================================================
-modelname = "../model_versions/20200716_w_cyto_comm.txt"
+modelname = "../model_versions/const_precursors.txt"
 with open(modelname, 'r') as myfile:
     antimony_model = myfile.read()
 
@@ -44,7 +44,9 @@ pnames = ["prolif_Th1_base",
           "r_Naive"
           ]
 
-
+#sensitivity_analysis(r, pnames, param_fc = 1.5, sym = True, log_p = False, save = True)
 
 pnames = ["fb_IL10_Th1", "fb_IL2_Tfh"]
-sensitivity_analysis(r, pnames, param_fc = 100, sym = "neg", log_p = True, save = True)
+sensitivity_analysis(r, pnames, param_fc = 10, sym = "neg", log_p = True, save = True)
+
+

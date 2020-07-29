@@ -93,16 +93,16 @@ model test
     pTfhc_fb := pTfhc_base*pos_feedback(TCR, EC50_TCR) 
 
     # normalize probabilities
-    prob_Th1 := pTh1_fb /   (pTfhc_fb+pTh1_fb+pTfh_fb+pTr1_fb+pPrec_base)
-    prob_Tfh := pTfh_fb /   (pTfhc_fb+pTh1_fb+pTfh_fb+pTr1_fb+pPrec_base)
-    prob_Tr1 := pTr1_fb /   (pTfhc_fb+pTh1_fb+pTfh_fb+pTr1_fb+pPrec_base)
-    prob_Prec := pPrec_base/(pTfhc_fb+pTh1_fb+pTfh_fb+pTr1_fb+pPrec_base)
-    prob_Tfhc := pTfhc_fb / (pTfhc_fb+pTh1_fb+pTfh_fb+pTr1_fb+pPrec_base)
+    prob_Th1 := pTh1_fb*0.75 / (pTfhc_fb+pTh1_fb+pTfh_fb+pTr1_fb)
+    prob_Tfh := pTfh_fb*0.75 / (pTfhc_fb+pTh1_fb+pTfh_fb+pTr1_fb)
+    prob_Tr1 := pTr1_fb*0.75 / (pTfhc_fb+pTh1_fb+pTfh_fb+pTr1_fb)
+    prob_Prec = 0.25
+    prob_Tfhc := pTfhc_fb*0.75 / (pTfhc_fb+pTh1_fb+pTfh_fb+pTr1_fb)
 
 	########################## parameters proliferation ###############################################
 	###################################################################################################
 	###################################################################################################
-    prolif_TCR_base = 11.4
+    prolif_TCR_base = 8.4
  	prolif_Th1_base = 4.5 # 4.5/alpha=2 = 2.25 division per day, 10.5 hours per division
  	prolif_Tfh_base = 4.5  # 4.5/alpha=2 = 2.25 division per day, 10.5 hours per division
  	prolif_Prec_base = 4.4  # 4.5/alpha=2 = 2.25 division per day, 10.5 hours per division
@@ -132,7 +132,7 @@ model test
     death_Th1 = 0.24
     death_Tfh = 0.24
     death_Tr1 = 0.04
-    death_Tfhc = 0.0001
+    death_Tfhc = 0.01
 
 	########################## parameters molecules ###################################################
 	###################################################################################################

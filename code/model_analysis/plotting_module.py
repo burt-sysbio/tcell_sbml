@@ -94,4 +94,5 @@ def plot_param_uncertainty(df, pname, log_p = False, save = False):
         if not os.path.exists(savepath):
             os.makedirs(savepath)
         fig.savefig(savepath+"/sensitiviy_analysis_"+pname+".pdf")
+        plt.close()
     # set to origin at the end of experiment
