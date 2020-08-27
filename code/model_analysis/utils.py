@@ -9,6 +9,8 @@ import numpy as np
 import pandas as pd
 from scipy import constants
 from plotting_module import plot_param_uncertainty
+import readout_module as readouts
+
 
 def get_rel_cells(cells):
     """
@@ -29,10 +31,114 @@ def filter_cells(cells, names):
     return out
 
 
+def get_readouts(time, cells):
+    """
+    get readouts from state array
+    """
+
+    peak = readouts.get_peak_height(time, cells)
+    area = readouts.get_area(time, cells)
+    tau = readouts.get_peaktime(time, cells)
+    decay = readouts.get_duration(time, cells)
+    
+    reads = [peak, area, tau, decay]
+    read_names = ["Peak Height", "Response Size", "Peak Time", "Decay"]
+    data = {"readout" : read_names, "read_val" : reads}
+    reads_df = pd.DataFrame(data = data)
+    
+    return reads_df
+
+
+def readout_sensitivity(r, startVal, pname, celltypes, bounds = (0.9,1.1)):
+    """
+
+    Parameters
+    ----------
+    r : antimony model
+    startVal : float
+        default parameter value
+    pname : string
+        parameter name
+    celltypes : list
+        list of celltype names. e.g. ["Th1_all", "Tfh_all"] as given by compute cell states fun
+    bounds : tuple
+        increase/decrease default param by this foldchange. The default is (0.9,1.1).
+
+    Returns
+    -------
+    df : normalized data frame with readouts for different cell types and arm+cl13 infection
+
+    """
+    vals = [0.9*startVal, startVal, 1.1*startVal]
+    reads_list = []
+
+    for val in vals:
+        r.resetToOrigin()
+        exec("r.%s = %f" % (pname, val))
+        start = 0
+        stop = 70
+        res = 200
+        arm_sim = r.simulate(start, stop, res)
+        
+        # sum arm and cl13 sim
+        r.reset()
+        r.deg_TCR = 0.0001
+        cl13_sim = r.simulate(start,stop,res)
+        
+        # finalze dfs
+        arm_df = pd.DataFrame(arm_sim, columns = arm_sim.colnames)
+        cl13_df = pd.DataFrame(cl13_sim, columns = cl13_sim.colnames)
+        
+        
+        arm_df = compute_cell_states(arm_df)   
+        cl13_df = compute_cell_states(cl13_df)
+        
+        reads = []
+        labels = ["Arm", "Cl13"]
+        for df, label in zip([arm_df, cl13_df], labels):
+            for celltype in celltypes:
+                df_reads = get_readouts(df.time, df[celltype])
+                df_reads["celltype"] = celltype
+                df_reads["Infection"] = label
+                reads.append(df_reads)
+                
+        
+        reads = pd.concat(reads)
+        reads["param_val"] = val
+
+        reads_list.append(reads)
+        
+    reads = pd.concat(reads_list)
+    reads["pname"] = pname
+    
+    df = norm_sens_ana(reads, startVal)
+    return df
+
+
+def norm_sens_ana(df, norm_val):
+    """ 
+    take data frame with readouts from fun readout_sensitivity
+    and normalize to middle of 3 values
+    """
+    df2 = df[df.param_val == norm_val]
+    df2 = df2.rename(columns = {"read_val" : "read_norm"})
+    df2 = df2.drop(columns = ["param_val"])
+    df = df.merge(df2, on=['readout', "celltype", 'pname', "Infection"], how='left')
+    
+    df["param_norm"] = norm_val
+    df["param_norm"] = df.param_val/df.param_norm
+    
+    # compute log2FC
+    logseries = df["read_val"]/df["read_norm"]
+    logseries = logseries.astype(float)
+
+    df["log2FC"] = np.log2(logseries)
+    df = df.drop(columns = ["read_norm"])
+    return df
+
+
 def run_param_uncertainty(r, startVal, name, param_fc, sym, log_p, num_sims = 50):
     """
-    
-
     Parameters
     ----------
     r : roadrunner instance
@@ -97,10 +203,6 @@ def run_param_uncertainty(r, startVal, name, param_fc, sym, log_p, num_sims = 50
     return df
 
 
-
-
-    
-    
 def compute_cell_states(df, model_name = "no_cyto_comm_model"):
     """
     # takes data frame and computes cell states
@@ -240,3 +342,33 @@ def sensitivity_analysis(r, pnames, param_fc, sym, log_p, save = False):
         if pname in pnames:
             df = run_param_uncertainty(r, val, pname, param_fc, sym, log_p)
             plot_param_uncertainty(df, pname, log_p, save)
+            
+            
+def sensitivity_analysis2(r, pnames, celltypes):
+    """
+    run and plot sensitivity analysis for multiple parameters
+
+    Parameters
+    ----------
+    r : roadrunner instance
+        DESCRIPTION.
+    pnames : list of parameter names
+        DESCRIPTION.
+
+    Returns
+    -------
+    None
+
+    """
+    startVals = r.getGlobalParameterValues()
+    ids = r.getGlobalParameterIds()
+
+    # run sensitivity for each parameter name provided
+    df_list = []
+    for val, pname in zip(startVals, ids): 
+        if pname in pnames:
+            df = readout_sensitivity(r, val, pname, celltypes)
+            df_list.append(df)
+    
+    df = pd.concat(df_list)
+    return df
