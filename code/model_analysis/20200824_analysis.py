@@ -6,11 +6,14 @@ import tellurium as te
 
 from datetime import date
 import os
+import matplotlib
+matplotlib.use("TkAgg")
 import matplotlib.pyplot as plt
 
 from utils import run_pipeline, filter_cells
 import pandas as pd
 import seaborn as sns
+import pickle
 
 sns.set(context="poster", style="ticks")
 # =============================================================================
@@ -32,6 +35,15 @@ with open(modelname, 'r') as myfile:
 # run simulations
 # =============================================================================
 r = te.loada(antimony_model)
+use_fit = True
+if use_fit:
+    with open('fit_result.p', 'rb') as fp:
+        fit_result = pickle.load(fp)
+        print(fit_result)
+    for key, val in fit_result.items():
+        r[key]=val
+        print(r[key])
+
 
 cells, cytos = run_pipeline(r)
 
@@ -84,4 +96,4 @@ for ax, data, error in zip(g.axes.flat, data_fahey, errors_fahey):
     ax.set_ylabel("cells")
 
 plt.show()
-g.savefig(path+today+"/model_fit_simulation.svg")
+#g.savefig(path+today+"/model_fit_simulation.svg")

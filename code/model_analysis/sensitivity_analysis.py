@@ -8,9 +8,9 @@ sensitivity analysis for parameter annotated model
 """
 
 import tellurium as te
-import matplotlib
-print(matplotlib.get_backend())
 import pandas as pd
+import matplotlib
+matplotlib.use("TkAgg")
 import seaborn as sns
 sns.set(context = "poster", style = "ticks")
 from datetime import date
@@ -41,15 +41,32 @@ r = te.loada(antimony_model)
 # =============================================================================
 
 
-pnames = ["r_Naive", "death_Prec", "death_Th1", "death_Tfh", "death_Tr1", "death_Tfhc",
-          "r_Prec", "n_div", "r_Mem_base", "prolif_TCR_base", "prolif_Th1_base",
-          "prolif_Tfh_base", "prolif_Prec_base", "prolif_Tr1_base", "prolif_Tfhc_base",
-          "deg_Myc", "EC50_Myc", "deg_TCR", "EC50_TCR"]
+pnames = ["death_Tr1", "death_Tfhc", "death_Th1", "death_Tfh", "r_Prec", "prolif_Th1_base",
+          "prolif_Tr1_base", "prolif_Tfh_base",
+          "prolif_Tfhc_base", "prolif_Prec_base"]
 
-celltypes = ["Th1_eff", "Tfh_eff", "Tr1_all", "Tfh_chronic", "Total_CD4"]
+celltypes = ["Tfh_all", "nonTfh"]
 
 reads = utils.sensitivity_analysis2(r, pnames, celltypes)
 reads = reads[reads.readout == "Response Size"]
-g = sns.catplot(data = reads, x = "pname", y = "log2FC", col = "Infection",
-                row = "celltype", kind = "bar", hue = "param_norm")
+
+for cell in celltypes:
+    df = reads[reads.celltype == cell]
+    g = sns.catplot(data = df, x = "pname", y = "log2FC", col = "Infection",
+                    kind = "bar", hue = "param_norm", palette= ["0.2", "0.6"])
+    g.set(ylabel = "Effect Size "+cell)
+    g.set_xticklabels(rotation=90)
+    plt.show()
+    g.savefig(path+today+"/sensitivity_" + cell + ".svg")
+    g.savefig(path + today + "/sensitivity_" + cell + ".pdf")
+
+
+
+df2 = reads[reads.param_norm == 1.1]
+g = sns.catplot(data = df2, x = "pname", y = "log2FC", col = "Infection",
+                kind = "bar", hue = "celltype", palette= ["0.2", "0.6"])
+
+g.set(ylabel="Effect Size", ylim = (-1.6,1.6))
+g.set_xticklabels(rotation=90)
+g.savefig(path + today + "/sensitivity_10perc_param_increase.pdf")
 plt.show()

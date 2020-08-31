@@ -126,7 +126,7 @@ def norm_sens_ana(df, norm_val):
     df = df.merge(df2, on=['readout', "celltype", 'pname', "Infection"], how='left')
     
     df["param_norm"] = norm_val
-    df["param_norm"] = df.param_val/df.param_norm
+    df["param_norm"] = np.round(df.param_val/df.param_norm, 1)
     
     # compute log2FC
     logseries = df["read_val"]/df["read_norm"]
@@ -371,4 +371,6 @@ def sensitivity_analysis2(r, pnames, celltypes):
             df_list.append(df)
     
     df = pd.concat(df_list)
+    # remove the normalized parameter value with FC=0
+    df = df[df.param_norm != 1.0]
     return df

@@ -4,20 +4,21 @@ Created on Wed Jun  3 17:27:59 2020
 
 @author: Philipp
 """
-
-
 import lmfit
-
+import tellurium as te
 import numpy as np
 from lmfit import minimize, Parameters
+import matplotlib
+matplotlib.use("TkAgg")
 
-import tellurium as te
 import matplotlib.pyplot as plt
 import pandas as pd
 import pickle
 import seaborn as sns
+sns.set(context="poster", style="ticks")
 import os
 from datetime import date
+from utils import compute_cell_states
 
 today = str(date.today())
 path = "../../figures/"
@@ -28,22 +29,6 @@ if not os.path.exists(path+today):
 def filter_cells(cells, names):
     out = cells[cells.celltype.isin(names)]
     return out
-
-
-def compute_cell_states(df):
-    df["Precursors"] = df.Prec + df.Prec1
-    df["Th1_eff"] = df.Th1 + df.Th1_2 + df.Th1_mem
-    df["Tfh_eff"] = df.Tfh + df.Tfh_2 + df.Tfh_mem
-    df["Tr1_all"] = df.Tr1+df.Tr1_2
-
-    df["nonTfh"] = df.Th1_eff+df.Tr1_all
-    df["Tfh_chronic"] = df.Tfhc + df.Tfhc_2
-    df["Tfh_all"] = df.Tfh_chronic + df.Tfh_eff
-    df["Th_chronic"] = df.Tfh_chronic + df.Tr1_all
-    df["Th_eff"] = df.Th1_eff + df.Tfh_eff
-    df["Th_mem"] = df.Th1_mem+df.Tfh_mem
-    df["Total_CD4"] = df.Precursors + df.Th1_eff + df.Tfh_all + df.Tr1_all
-    return df
 
 
 def transform(sim, data, timepoints = [9, 30, 60]):
@@ -135,15 +120,22 @@ def residual(params, r, data1, data2):
 # =============================================================================
 path_data = "../../chronic_infection_model/data_literature/"
 
-fahey = "fahey_clean.csv"
+fahey = "fahey_cell_numbers.csv"
 df_fahey = pd.read_csv(path_data+fahey)
+df_fahey = pd.melt(df_fahey, id_vars=["time"])
+df_fahey[["celltype", "name"]] = df_fahey.variable.str.split("_", expand = True)
+print(df_fahey)
+
+
 data_arm = df_fahey[df_fahey.name == "Arm"]
 data_arm["eps"] = [1e3, 1e3, 1e3, 1e3, 1e3, 1e3]
 
 data_cl13 = df_fahey[df_fahey.name == "Cl13"]
 data_cl13["eps"] = [1e4, 1e4, 1e4, 1e3, 1e3, 1e3]
 
-modelname = "../model_versions/no_cyto_communication.txt"
+print(data_arm)
+print(data_cl13)
+modelname = "../model_versions/const_precursors.txt"
 with open(modelname, 'r') as myfile:
     antimony_model = myfile.read()
     
@@ -154,16 +146,12 @@ r = te.loada(antimony_model)
 # =============================================================================
 params = Parameters()
 
-params.add('death_Th1', value=0.24, min = 0.21, max = 0.27)
-params.add('death_Tfh', value=0.24, min = 0.21, max = 0.27)
-params.add('death_Tr1', value=0.04, min = 0, max = 0.1)
-params.add('death_Tfhc', value=0, min = 0, max = 0.1)
-params.add('prolif_Th1_base', value=4.5, min = 4.2, max = 4.7)
-params.add('prolif_Tfh_base', value=4.5, min = 4.2, max = 4.7)
-params.add('prolif_Tr1_base', value=3.0, min = 2.8, max = 3.2)
-params.add('prolif_Tfhc_base', value=2.1, min = 1.9, max = 2.3)
-params.add('r_Mem_base', value=0.01, min = 0.005, max = 0.015)
-
+params.add('death_Tr1', value=0.07, min = 0, max = 0.2)
+params.add('death_Tfhc', value=0.01, min = 0, max = 0.04)
+params.add('prolif_Tr1_base', value=2, min = 0.5, max = 2.5)
+params.add('prolif_Tfhc_base', value=1.0, min = 0.5, max = 2.3)
+params.add("r_Prec", value = 1.0, min = 0.75, max = 1.25)
+params.add("deg_Myc", value = 0.32, min = 0.28, max = 0.35)
 
 # =============================================================================
 # run fitting procedure
@@ -176,8 +164,6 @@ print(out.message)
 # store fit result
 with open('fit_result.p', 'wb') as fit_result:
     pickle.dump(out_values, fit_result, protocol=pickle.HIGHEST_PROTOCOL)
-
-
 
 # =============================================================================
 # run simulations             
@@ -230,8 +216,8 @@ for ax, df in zip(g.axes.flat, data_fahey):
                     ax = ax, legend = False, palette = ["0.5", "k"])
  
     ax.set_ylabel("cells")
-    
-g.savefig(path+today+"/modelfit_leastsquares.pdf")
+plt.show()
+#g.savefig(path+today+"/modelfit_leastsquares.pdf")
 
 # =============================================================================
 # get other output
@@ -243,20 +229,21 @@ g = sns.relplot(data = df_2, x = "time", y = "value",  hue = "Infection",
                 col_wrap = 3)
 g.set(yscale = "log", ylim = (0.01, None), xlabel = xlabel, xticks = xticks)
 
-
+plt.show()
 df_3 = filter_cells(cells_tfh, ["Tfh_all", "nonTfh"])
 g = sns.relplot(data = df_3, x = "time", y = "value", hue = "celltype",
                 col = "Infection", kind = "line")
 g.set(yscale = "log", ylim = (0.01, None), xlabel = xlabel, xticks = xticks)
-
+plt.show()
 
 df_4 = filter_cells(cells_tfh, ["Th_chronic", "Th_eff"])
 g= sns.relplot(data = df_4, x = "time", y = "value", hue = "celltype",
                col = "Infection", kind = "line")
 g.set(yscale = "log", ylim = (0.01, None), xlabel = xlabel, xticks = xticks)
-
+plt.show()
 
 df_5 = filter_cells(cells_tfh, ["Th_mem"])
 g= sns.relplot(data = df_5, x = "time", y = "value", hue = "Infection",
                kind = "line")
 g.set(yscale = "log", ylim = (0.01, None), xlabel = xlabel, xticks = xticks)
+plt.show()
