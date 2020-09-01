@@ -69,7 +69,7 @@ def readout_sensitivity(r, startVal, pname, celltypes, bounds = (0.9,1.1)):
     df : normalized data frame with readouts for different cell types and arm+cl13 infection
 
     """
-    vals = [0.9*startVal, startVal, 1.1*startVal]
+    vals = [0.5*startVal, startVal, 2.0*startVal]
     reads_list = []
 
     for val in vals:

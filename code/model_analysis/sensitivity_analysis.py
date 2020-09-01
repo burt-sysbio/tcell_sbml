@@ -6,17 +6,22 @@ Created on Tue Aug 25 13:09:49 2020
 @author: burt
 sensitivity analysis for parameter annotated model
 """
-
-import tellurium as te
-import pandas as pd
 import matplotlib
-matplotlib.use("TkAgg")
+print(matplotlib.get_backend())
+import tellurium as te
+print(matplotlib.get_backend())
+import pandas as pd
+matplotlib.use("QT5Agg")
 import seaborn as sns
+
 sns.set(context = "poster", style = "ticks")
+print(matplotlib.get_backend())
 from datetime import date
 import os
 import matplotlib.pyplot as plt
+print(matplotlib.get_backend())
 import utils
+print(matplotlib.get_backend())
 import numpy as np
 
 # =============================================================================
@@ -41,14 +46,21 @@ r = te.loada(antimony_model)
 # =============================================================================
 
 
-pnames = ["death_Tr1", "death_Tfhc", "death_Th1", "death_Tfh", "r_Prec", "prolif_Th1_base",
-          "prolif_Tr1_base", "prolif_Tfh_base",
-          "prolif_Tfhc_base", "prolif_Prec_base"]
+pnames = ["death_Tr1", "death_Tfhc", "r_Prec",
+          "prolif_Tr1_base", "prolif_Tfhc_base", "r_Naive", "r_Mem_base"]
 
 celltypes = ["Tfh_all", "nonTfh"]
 
 reads = utils.sensitivity_analysis2(r, pnames, celltypes)
 reads = reads[reads.readout == "Response Size"]
+
+g = sns.catplot(data = reads, x = "pname", y = "log2FC", col = "celltype",
+                row = "Infection", kind = "bar", hue = "param_norm", palette=["0.2","0.6"], margin_titles= True,
+                aspect = 1.5)
+g.set(ylabel="Effect Size")
+g.set_xticklabels(rotation=90)
+plt.show()
+
 
 for cell in celltypes:
     df = reads[reads.celltype == cell]
@@ -56,17 +68,17 @@ for cell in celltypes:
                     kind = "bar", hue = "param_norm", palette= ["0.2", "0.6"])
     g.set(ylabel = "Effect Size "+cell)
     g.set_xticklabels(rotation=90)
-    plt.show()
-    g.savefig(path+today+"/sensitivity_" + cell + ".svg")
-    g.savefig(path + today + "/sensitivity_" + cell + ".pdf")
+    #plt.show()
+    #g.savefig(path+today+"/sensitivity_" + cell + ".svg")
+    #g.savefig(path + today + "/sensitivity_" + cell + ".pdf")
 
 
 
-df2 = reads[reads.param_norm == 1.1]
+df2 = reads[reads.param_norm == 2.0]
 g = sns.catplot(data = df2, x = "pname", y = "log2FC", col = "Infection",
                 kind = "bar", hue = "celltype", palette= ["0.2", "0.6"])
 
-g.set(ylabel="Effect Size", ylim = (-1.6,1.6))
+#g.set(ylabel="Effect Size", ylim = (-1.6,1.6))
 g.set_xticklabels(rotation=90)
-g.savefig(path + today + "/sensitivity_10perc_param_increase.pdf")
-plt.show()
+#g.savefig(path + today + "/sensitivity_10perc_param_increase.pdf")
+#plt.show()

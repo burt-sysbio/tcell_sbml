@@ -13,8 +13,6 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 import utils
 from matplotlib.colors import LogNorm, Normalize
-sns.set(context = "paper", style = "ticks")
-
 
 def plot_param_uncertainty(df, pname, log_p = False, save = False): 
     """
