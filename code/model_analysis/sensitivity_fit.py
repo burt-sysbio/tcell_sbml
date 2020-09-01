@@ -180,13 +180,14 @@ with open(modelname, 'r') as myfile:
 # =============================================================================
 
 params = Parameters()
-params.add('death_Tr1', value=0.077, min = 0, max = 0.2)
-params.add('death_Tfhc', value=0.02, min = 0, max = 0.06)
-params.add('prolif_Tr1_base', value=2.5, min = 0.5, max = 6.0)
-params.add('prolif_Tfhc_base', value=0.5, min = 0, max = 2.3)
+params.add('death_Tr1', value=0.047, min = 0, max = 0.2)
+params.add('death_Tfhc', value=0.025, min = 0, max = 0.04)
+params.add('prolif_Tr1_base', value=2.9, min = 0.5, max = 6.0)
+params.add('prolif_Tfhc_base', value=0.34, min = 0, max = 2.3)
 params.add("pTh1_base", value = 0.13, min = 0, max = 1.0)
 params.add("pTfh_base", value = 0.08, min = 0, max = 1.0)
-params.add("pTr1_base", value = 0.45, min = 0, max = 1.0)
+params.add("pTr1_base", value = 0.25, min = 0, max = 1.0)
+params.add("deg_Myc", value = 0.32, min =0.28, max = 0.35)
 params.add("pTfhc_base", expr="1.0-pTh1_base-pTfh_base-pTr1_base")
 params.add("r_Mem_base", value = 0.01, min = 0, max = 0.2)
 
@@ -196,6 +197,7 @@ params.add("r_Mem_base", value = 0.01, min = 0, max = 0.2)
 pnames = ["death_Tr1"]
 
 r = te.loada(antimony_model)
+r.resetToOrigin()
 out = minimize(residual, params, args=(r, data_arm, data_cl13))
 out_values = out.params.valuesdict()
 print(out_values)

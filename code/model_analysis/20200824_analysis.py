@@ -3,11 +3,11 @@ run simulation and compare with data from fahey et al
 """
 
 import tellurium as te
-
+import matplotlib
+matplotlib.use("QT5Agg")
 from datetime import date
 import os
 import matplotlib.pyplot as plt
-
 from utils import run_pipeline, filter_cells
 import pandas as pd
 import seaborn as sns
