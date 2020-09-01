@@ -4,12 +4,9 @@ Created on Wed Jun  3 17:27:59 2020
 
 @author: Philipp
 """
-import lmfit
 import tellurium as te
 import numpy as np
 from lmfit import minimize, Parameters
-import matplotlib
-matplotlib.use("TkAgg")
 
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -124,17 +121,14 @@ fahey = "fahey_cell_numbers.csv"
 df_fahey = pd.read_csv(path_data+fahey)
 df_fahey = pd.melt(df_fahey, id_vars=["time"])
 df_fahey[["celltype", "name"]] = df_fahey.variable.str.split("_", expand = True)
-print(df_fahey)
 
 
 data_arm = df_fahey[df_fahey.name == "Arm"]
 data_arm["eps"] = [1e3, 1e3, 1e3, 1e3, 1e3, 1e3]
 
 data_cl13 = df_fahey[df_fahey.name == "Cl13"]
-data_cl13["eps"] = [1e4, 1e4, 1e4, 1e3, 1e3, 1e3]
+data_cl13["eps"] = [1e3, 1e3, 1e3, 1e3, 1e3, 1e3]
 
-print(data_arm)
-print(data_cl13)
 modelname = "../model_versions/const_precursors.txt"
 with open(modelname, 'r') as myfile:
     antimony_model = myfile.read()
@@ -146,13 +140,16 @@ r = te.loada(antimony_model)
 # =============================================================================
 params = Parameters()
 
-params.add('death_Tr1', value=0.07, min = 0, max = 0.2)
-params.add('death_Tfhc', value=0.01, min = 0, max = 0.04)
-params.add('prolif_Tr1_base', value=2, min = 0.5, max = 2.5)
-params.add('prolif_Tfhc_base', value=1.0, min = 0.5, max = 2.3)
-params.add("r_Prec", value = 1.0, min = 0.75, max = 1.25)
-params.add("deg_Myc", value = 0.32, min = 0.28, max = 0.35)
-
+params.add('death_Tr1', value=0.077, min = 0, max = 0.2)
+params.add('death_Tfhc', value=0.02, min = 0, max = 0.04)
+params.add('prolif_Tr1_base', value=2.5, min = 0.5, max = 6.0)
+params.add('prolif_Tfhc_base', value=0.5, min = 0, max = 2.3)
+params.add("pTh1_base", value = 0.13, min = 0, max = 1.0)
+params.add("pTfh_base", value = 0.08, min = 0, max = 1.0)
+params.add("pTr1_base", value = 0.5, min = 0, max = 1.0)
+params.add("deg_Myc", value = 0.32, min =0.28, max = 0.35)
+params.add("pTfhc_base", expr="1.0-pTh1_base-pTfh_base-pTr1_base")
+params.add("r_Mem_base", value = 0.01, min = 0, max = 0.2)
 # =============================================================================
 # run fitting procedure
 # =============================================================================
@@ -161,6 +158,7 @@ out = minimize(residual, params, args=(r, data_arm, data_cl13))
 out_values = out.params.valuesdict()
 print(out_values)
 print(out.message)
+print(np.sqrt(out.chisqr))
 # store fit result
 with open('fit_result.p', 'wb') as fit_result:
     pickle.dump(out_values, fit_result, protocol=pickle.HIGHEST_PROTOCOL)
@@ -206,7 +204,7 @@ df_1 = filter_cells(cells_tfh, ["Tfh_all", "nonTfh"])
 g = sns.relplot(data = df_1, x = "time", y = "value", hue = "celltype",
                 col = "Infection", kind = "line", palette = ["k", "0.5"])
 
-g.set(yscale = "log", ylabel = "cells", ylim = (1e2, 1e7), xlim = (0,70), 
+g.set(yscale = "log", ylabel = "cells", ylim = (1e4, 1e7), xlim = (0,70),
       xlabel = "time (days)")
 
 data_fahey = [data_arm, data_cl13]

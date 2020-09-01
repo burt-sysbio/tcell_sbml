@@ -124,7 +124,7 @@ model test
     pTfh_base = 0.15
     pTr1_base = 0.2
     pTfhc_base = 0.3
-    pPrec_base = 1-pTh1_base-pTfh_base-pTr1_base-pTfhc_base
+    # pPrec_base = 1-pTh1_base-pTfh_base-pTr1_base-pTfhc_base
 
 	########################## parameters death #######################################################
 	###################################################################################################

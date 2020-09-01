@@ -6,22 +6,16 @@ Created on Tue Aug 25 13:09:49 2020
 @author: burt
 sensitivity analysis for parameter annotated model
 """
-import matplotlib
-print(matplotlib.get_backend())
+#import matplotlib
 import tellurium as te
-print(matplotlib.get_backend())
 import pandas as pd
-matplotlib.use("QT5Agg")
+#matplotlib.use("QT5Agg")
 import seaborn as sns
-
 sns.set(context = "poster", style = "ticks")
-print(matplotlib.get_backend())
 from datetime import date
 import os
 import matplotlib.pyplot as plt
-print(matplotlib.get_backend())
 import utils
-print(matplotlib.get_backend())
 import numpy as np
 
 # =============================================================================
@@ -71,7 +65,6 @@ for cell in celltypes:
     #plt.show()
     #g.savefig(path+today+"/sensitivity_" + cell + ".svg")
     #g.savefig(path + today + "/sensitivity_" + cell + ".pdf")
-
 
 
 df2 = reads[reads.param_norm == 2.0]
