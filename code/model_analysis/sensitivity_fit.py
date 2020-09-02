@@ -4,7 +4,8 @@ from lmfit import minimize, Parameters
 import matplotlib.pyplot as plt
 import pandas as pd
 import seaborn as sns
-
+import matplotlib
+matplotlib.use("QT5Agg")
 sns.set(context="poster", style="ticks")
 import os
 from datetime import date
@@ -113,6 +114,7 @@ def fit_sensitivity(r, params, pname, data_arm, data_cl13, bounds):
     also needs bounds and data for arm and cl13
     """
 
+
     assert pname in params.keys()
     myparam = params[pname]
     startVal = myparam.value
@@ -120,9 +122,9 @@ def fit_sensitivity(r, params, pname, data_arm, data_cl13, bounds):
     err_list = []
 
     for val in vals:
+        r.resetToOrigin()
         # set desired parameter to new value (keep original bounds)
         params[pname].set(value = val, min = myparam.min, max = myparam.max, vary = True)
-        print(params)
         # run fit routine, get error (not root calculated by default) and add to list
         fit = minimize(residual, params, args=(r, data_arm, data_cl13))
         err = fit.chisqr
@@ -146,7 +148,7 @@ def fit_sensitivity(r, params, pname, data_arm, data_cl13, bounds):
     return df
 
 
-def run_fit_sensitivity(pnames, r, params, data_arm, data_cl13, bounds = (1.0, 1.0)):
+def run_fit_sensitivity(pnames, r, params, data_arm, data_cl13, bounds = (0.9, 1.1)):
     """
     for each parameter in pnames (list of strings) vary parameter value and fit model afterwords, return error
     """
@@ -191,10 +193,10 @@ params.add("deg_Myc", value = 0.32, min =0.28, max = 0.35)
 params.add("pTfhc_base", expr="1.0-pTh1_base-pTfh_base-pTr1_base")
 params.add("r_Mem_base", value = 0.01, min = 0, max = 0.2)
 
-#pnames = ["death_Tr1", "prolif_Tr1_base", "death_Tfhc", "prolif_Tfhc_base",
-#          "r_Mem_base", "pTh1_base", "pTfh_base", "pTr1_base"]
+pnames = ["death_Tr1", "prolif_Tr1_base", "death_Tfhc", "prolif_Tfhc_base",
+          "r_Mem_base", "pTh1_base", "pTfh_base"]
 
-pnames = ["death_Tr1"]
+#pnames = ["death_Tr1", "prolif_Tr1_base"]
 
 r = te.loada(antimony_model)
 r.resetToOrigin()
@@ -205,16 +207,15 @@ print(out.message)
 print(np.sqrt(out.chisqr))
 
 
-#df_err = run_fit_sensitivity(pnames, r, params, data_arm, data_cl13)
-#df_err = df_err[df_err["Param. change"] != 1.0]
+df_err = run_fit_sensitivity(pnames, r, params, data_arm, data_cl13)
+df_err = df_err[df_err["Param. change"] != 1.0]
 
-#g= sns.catplot(data = df_err, x = "pname", y = "error_norm", hue = "Param. change", kind = "bar",
-#               palette=["0.2", "0.6"])
+g= sns.catplot(data = df_err, x = "pname", y = "error_norm", hue = "Param. change", kind = "bar",
+               palette=["0.2", "0.6"])
 
-#for ax in g.axes.flat:
-#    ax.axes.axhline()
-#g.set(ylabel="$\Delta$ Error", ylim = (-60, 60))
-#g.set_xticklabels(rotation=90)
-#plt.show()
+g.set(ylabel="$\Delta$ Error")
+g.set_xticklabels(rotation=90)
+plt.show()
 
-#g.savefig(path+today+"/fit_sensitivity.svg")
+g.savefig(path+today+"/fit_sensitivity.svg")
+g.savefig(path+today+"/fit_sensitivity.pdf")

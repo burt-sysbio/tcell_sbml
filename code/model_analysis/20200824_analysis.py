@@ -35,7 +35,7 @@ with open(modelname, 'r') as myfile:
 r = te.loada(antimony_model)
 use_fit = True
 if use_fit:
-    with open('fit_result.p', 'rb') as fp:
+    with open('awesome_fit_result.p', 'rb') as fp:
         fit_result = pickle.load(fp)
         print(fit_result)
     for key, val in fit_result.items():
@@ -94,4 +94,4 @@ for ax, data, error in zip(g.axes.flat, data_fahey, errors_fahey):
     ax.set_ylabel("cells")
 
 plt.show()
-#g.savefig(path+today+"/model_fit_simulation.svg")
+g.savefig(path+today+"/model_fit_simulation.pdf")
