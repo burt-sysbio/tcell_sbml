@@ -43,6 +43,9 @@ if use_fit:
         print(r[key])
 
 
+# set memory low to test dynamic behavior
+#r["death_Tr1"] = 0.09
+
 cells, cytos = run_pipeline(r)
 
 xlabel = "time post infection (d)"
@@ -94,4 +97,4 @@ for ax, data, error in zip(g.axes.flat, data_fahey, errors_fahey):
     ax.set_ylabel("cells")
 
 plt.show()
-g.savefig(path+today+"/model_fit_simulation.pdf")
+#g.savefig(path+today+"/model_fit_simulation.pdf")

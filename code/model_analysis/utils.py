@@ -49,7 +49,7 @@ def get_readouts(time, cells):
     return reads_df
 
 
-def readout_sensitivity(r, startVal, pname, celltypes, bounds = (0.9,1.1)):
+def readout_sensitivity(r, startVal, pname, celltypes, bounds):
     """
 
     Parameters
@@ -69,7 +69,7 @@ def readout_sensitivity(r, startVal, pname, celltypes, bounds = (0.9,1.1)):
     df : normalized data frame with readouts for different cell types and arm+cl13 infection
 
     """
-    vals = [0.5*startVal, startVal, 2.0*startVal]
+    vals = [bounds[0]*startVal, startVal, bounds[1]*startVal]
     reads_list = []
 
     for val in vals:
@@ -344,7 +344,7 @@ def sensitivity_analysis(r, pnames, param_fc, sym, log_p, save = False):
             plot_param_uncertainty(df, pname, log_p, save)
             
             
-def sensitivity_analysis2(r, pnames, celltypes):
+def sensitivity_analysis2(r, pnames, celltypes, bounds):
     """
     run and plot sensitivity analysis for multiple parameters
 
@@ -358,7 +358,6 @@ def sensitivity_analysis2(r, pnames, celltypes):
     Returns
     -------
     None
-
     """
     startVals = r.getGlobalParameterValues()
     ids = r.getGlobalParameterIds()
@@ -367,7 +366,7 @@ def sensitivity_analysis2(r, pnames, celltypes):
     df_list = []
     for val, pname in zip(startVals, ids): 
         if pname in pnames:
-            df = readout_sensitivity(r, val, pname, celltypes)
+            df = readout_sensitivity(r, val, pname, celltypes, bounds)
             df_list.append(df)
     
     df = pd.concat(df_list)
