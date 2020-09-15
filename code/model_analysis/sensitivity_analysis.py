@@ -61,7 +61,7 @@ reads = reads[reads.readout == "Response Size"]
 reads = reads[reads.param_norm == bounds[1]]
 g = sns.catplot(data = reads, x = "pname", y = "log2FC", col = "Infection",
                 kind = "bar", hue = "celltype", palette=["0.6","0.2"], margin_titles= True,
-                aspect = 1.)
+                aspect = 0.7)
 g.set(ylabel="Effect size", ylim = (-1,1), xlabel = "")
 g.set_xticklabels(rotation=90)
 

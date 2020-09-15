@@ -3,8 +3,6 @@ run simulation and compare with data from fahey et al
 """
 
 import tellurium as te
-import matplotlib
-matplotlib.use("QT5Agg")
 from datetime import date
 import os
 import matplotlib.pyplot as plt
@@ -50,7 +48,7 @@ cells, cytos = run_pipeline(r)
 
 xlabel = "time post infection (d)"
 ylabel = "cells"
-xticks = [0, 10, 20, 30, 40, 50, 60]
+xticks = [0, 30, 60]
 
 # =============================================================================
 # plot fahey data
@@ -78,12 +76,12 @@ errors_fahey = [error_arm, error_cl13]
 # plot Tfh vs non Tfh with literature data
 df_1 = filter_cells(cells, ["Tfh_all", "nonTfh"])
 g = sns.relplot(data=df_1, x="time", y="value", hue="celltype",
-                col="Infection", kind="line", palette=["k", "0.5"],
-                aspect= 0.8)
+                row="Infection", kind="line", palette=["k", "0.5"],
+                aspect= 0.9, facet_kws= {"sharex" : False})
 g.set(yscale="log", ylabel="cells", ylim=(1e4, 3e6), xlim=(0, 70),
-      xlabel="time (days)")
+      xlabel="time (days)", xticks = xticks)
 
-g.set_titles("{col_name}")
+g.set_titles("{row_name}")
 ## add literature data
 for ax, data, error in zip(g.axes.flat, data_fahey, errors_fahey):
     ax.scatter(data.time, data.iloc[:, 1], c="0.5", s=60)
@@ -97,4 +95,5 @@ for ax, data, error in zip(g.axes.flat, data_fahey, errors_fahey):
     ax.set_ylabel("cells")
 
 plt.show()
-#g.savefig(path+today+"/model_fit_simulation.pdf")
+g.savefig(path+today+"/model_fit_simulation.pdf")
+g.savefig(path+today+"/model_fit_simulation.svg")
