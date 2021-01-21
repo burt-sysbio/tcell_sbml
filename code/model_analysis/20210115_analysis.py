@@ -23,8 +23,7 @@ if not os.path.exists(path + today):
 # =============================================================================
 # load model
 # =============================================================================
-# modelname = "../models/20200716_w_cyto_comm.txt"
-modelname = "../models/const_precursors.txt"
+modelname = "../models/model_2021.txt"
 
 with open(modelname, 'r') as myfile:
     antimony_model = myfile.read()
@@ -32,18 +31,6 @@ with open(modelname, 'r') as myfile:
 # run simulations
 # =============================================================================
 r = te.loada(antimony_model)
-use_fit = True
-if use_fit:
-    with open('awesome_fit_result.p', 'rb') as fp:
-        fit_result = pickle.load(fp)
-        print(fit_result)
-    for key, val in fit_result.items():
-        r[key]=val
-        print(r[key])
-
-
-# set memory low to test dynamic behavior
-#r["death_Tr1"] = 0.09
 
 cells, cytos = run_pipeline(r)
 
@@ -83,6 +70,7 @@ g.set(yscale="log", ylabel="cells", ylim=(1e4, 3e6), xlim=(0, 70),
       xlabel="time (days)", xticks = xticks)
 
 g.set_titles("{row_name}")
+
 ## add literature data
 for ax, data, error in zip(g.axes.flat, data_fahey, errors_fahey):
     ax.scatter(data.time, data.iloc[:, 1], c="0.5", s=60)

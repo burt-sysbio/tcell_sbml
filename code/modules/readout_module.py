@@ -4,12 +4,11 @@ Created on Mon Aug  3 10:43:36 2020
 
 @author: Philipp
 """
-
-
 import numpy as np
 from scipy.interpolate import InterpolatedUnivariateSpline
 from scipy import interpolate
 import warnings
+
 
 def get_maximum(x, y):
     """

@@ -12,7 +12,7 @@ from utils import sensitivity_analysis
 # =============================================================================
 # run model    
 # =============================================================================
-modelname = "../model_versions/const_precursors.txt"
+modelname = "../models/const_precursors.txt"
 with open(modelname, 'r') as myfile:
     antimony_model = myfile.read()
 

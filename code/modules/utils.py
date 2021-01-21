@@ -35,7 +35,6 @@ def get_readouts(time, cells):
     """
     get readouts from state array
     """
-
     peak = readouts.get_peak_height(time, cells)
     area = readouts.get_area(time, cells)
     tau = readouts.get_peaktime(time, cells)

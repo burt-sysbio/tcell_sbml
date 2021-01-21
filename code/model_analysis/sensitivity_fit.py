@@ -174,7 +174,7 @@ data_cl13 = df_fahey[df_fahey.name == "Cl13"]
 data_cl13["eps"] = [1e3, 1e3, 1e3, 1e3, 1e3, 1e3]
 
 # load model
-modelname = "../model_versions/const_precursors.txt"
+modelname = "../models/const_precursors.txt"
 with open(modelname, 'r') as myfile:
     antimony_model = myfile.read()
 

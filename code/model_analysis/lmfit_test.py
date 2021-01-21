@@ -7,16 +7,14 @@ Created on Wed Jun  3 17:27:59 2020
 import tellurium as te
 import numpy as np
 from lmfit import minimize, Parameters
-
 import matplotlib.pyplot as plt
 import pandas as pd
-import pickle
 import seaborn as sns
-sns.set(context="poster", style="ticks")
 import os
 from datetime import date
 from utils import compute_cell_states
 
+sns.set(context="poster", style="ticks")
 today = str(date.today())
 path = "../../figures/"
 if not os.path.exists(path+today):
@@ -80,6 +78,7 @@ def tidy_sort(df):
                                    "Total_CD4"])    
     return df_tidy, cells
 
+
 def residual(params, r, data1, data2):
     """
     function to be minimized
@@ -129,7 +128,7 @@ data_arm["eps"] = [1e3, 1e3, 1e3, 1e3, 1e3, 1e3]
 data_cl13 = df_fahey[df_fahey.name == "Cl13"]
 data_cl13["eps"] = [1e3, 1e3, 1e3, 1e3, 1e3, 1e3]
 
-modelname = "../model_versions/const_precursors.txt"
+modelname = "../models/const_precursors.txt"
 with open(modelname, 'r') as myfile:
     antimony_model = myfile.read()
     

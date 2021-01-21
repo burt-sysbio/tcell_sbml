@@ -29,8 +29,8 @@ if not os.path.exists(path+today):
 # =============================================================================
 #load model   
 # =============================================================================
-#modelname = "../model_versions/20200716_w_cyto_comm.txt"
-modelname = "../model_versions/const_precursors.txt"
+#modelname = "../models/20200716_w_cyto_comm.txt"
+modelname = "../models/const_precursors.txt"
 
 with open(modelname, 'r') as myfile:
     antimony_model = myfile.read()
